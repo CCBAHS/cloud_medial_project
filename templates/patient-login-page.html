@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="../static/css/patient_login_page.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;700&family=Ubuntu:ital@1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class = "loginbox" id="loginbox">
+            <div class="loginbox-child" id="loginbox-welcome">
+                
+                <div class='welcome-welcome'>
+                    Welcome to the ...
+                </div>
+                <div class="welcome-line"></div>
+                <div class='welcome-intro'>
+                    <!-- This section needs to be edited -->
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam dolorum repellendus laborum distinctio illo officia odit vel est quo! Ullam dolorem impedit recusandae deleniti officia.
+                </div>      
+                
+            </div>
+            
+            <div class="loginbox-child" id="loginbox-login">
+                <div class='login-signin'>
+                    Log in 
+                </div>
+                <div class='login-line'></div>
+                <div class='login-form'>
+                    <form method = "POST" action="/login" class="signin-form">
+                        <div class="signin-userid">
+                            <label class='userid-label' for="userid">UserID : </label>
+                            <input class='login-input' type="text" name="userid" id="userid" required><br>
+                        </div>
+                        <div class="signin-password">
+                            <label class='password-label' for="password">Password : </label>
+                            <input class='login-input' type="password" name="password" id="password" required><br>
+                        </div>
+                        <div class="signin-submit">
+                            <input type="submit" class="btn-submit" id='no_reload' value="Sign in"> 
+                        </div>
+                    </form>
+                </div>
+                <div class="forget-password">
+                    <a href="#" onclick="forget_password()"> Forget Password ?</a>
+                </div>
+                <div class="create-account">
+                    <button class="btn-account" onclick="create_account()" id="create-account-btn"> Create Account </button>
+                </div>
+            </div>
+        </div>
+        <div class = "create-account-box" id="createaccount-box">
+            <div class="heading-text">
+                Create New Account
+            </div>
+            <form method="POST" action="/account" class="create-account-form" enctype=multipart/form-data>
+                
+                <div class="create-div">
+                    <label for="name" class="create-label"> Name : </label>
+                    <input type="text" class="create-input " name="name" id="name" placeholder='Name as per Adhaar Card' required>
+                    <label for="dob" class="create-label"> Date of Birth : </label>
+                    <input type="date" class="create-input" name="dob" id="dob" onchange = "validate_date()" required>
+                
+                </div>
+                <div class="create-div">
+                    <label for="gender" class="create-label"> Gender : </label>
+                    <input type="radio" class = 'radio-input ' id="male" name="gender" value="Male" required>
+                    <label for="male" class = "create-gender">Male</label>
+                    <input type="radio" class = 'radio-input' id="female" name="gender" value="Female" required>
+                    <label for="female" class = "create-gender">Female</label>
+                    <input type="radio" class = 'radio-input' id="others" name="gender" value="Others" required>
+                    <label for="others" class = "create-gender">Others</label>
+                    <label for="identity" class="create-label"> Who are you ? </label>
+                    <input type="radio" name="identity" id="patient" class="radio-input mx--3" value="Patient" required>
+                    <label for="patient" class = "create-iden">Patient</label>
+                    <input type="radio" name="identity" id="doctor" class="radio-input" value="Doctor" required>
+                    <label for="doctor" class = "create-iden">Doctor</label>
+                    <input type="radio" name="identity" id="organisation" class="radio-input" value="Organisation" required>
+                    <label for="organisation" class = "create-iden">Organisation</label>
+               
+                </div>
+                <div class='create-div'>
+                    <label for="password-create" class="create-label"> Password : </label>
+                    <input type="password" class="create-input " name="password-create" id="password-create"  pattern='(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}' onchange='password_verification()' required>
+                    <label for="password-create-confirm" class="create-label my-10"> Confirm Password : </label>
+                    <input type="password" class="create-input" name="password-create-confirm" id="password-create-confirm" pattern='(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}' title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"  required onchange="password_verify()">
+                </div>
+                <div class='create-div'>
+                    <label for="emailid" class="create-label"> Email ID : </label>
+                    <input type="email" class="create-input " name='emailid' id="emailid" placeholder="" required>
+                    <label for="mobileno" class="create-label"> Mobile Number : </label>
+                    <input type="text" class="create-input"  name="mobileno" id="mobileno" placeholder="" pattern="[0-9]{10}" required>
+                </div>
+                <div class='create-div'>
+                    <label for="address" class="create-label"> Address : </label>
+                    <input type="text" class="create-input " name="address" id="address" placeholder="" required>
+                    <label for="pincode" class="create-label "> Pincode : </label>
+                    <input type="text" class="create-input " id="pincode" name='pincode' pattern="[0-9]{6}" placeholder required>
+                </div>
+                <div class='create-div'>
+                    <label for="city" class="create-label"> City : </label>
+                    <input type="text" class="create-input " name="city" id="city" placeholder="" required>
+                    <label for="state" class="create-label "> State/UT : </label>
+                    <input type="text" class="create-input " id="state" name='state' placeholder required>
+                </div>
+                <div class='create-div'>
+                    <label for="adhaar" class="create-label"> Adhaar Number : </label> 
+                    <input type="text" class='create-input mx--23' name='adhaar' id='adhaar1' pattern="[0-9]{12}" required>
+                </div>
+                <div class='create-div'>
+                    <label for="photo" class="create-label"> Upload Photo : </label>
+                    <input type="file" class="create-input " name='photo' id="photo" onchange="file_verify()" accept="image/*">
+                    
+                </div>
+                <div class="check">
+                    <input type="checkbox" name="agree" id="agree" class="create-label"> 
+                    <label for="agree">I agree to the terms and conditions.</label>
+                </div>
+                <div class="create-div">
+                    `<input type="submit" class="create-submit" id="submit-account-create-btn" onclick="no_reload()">
+                </div>
+            </form>
+        </div>
+        <div class = "forget-password-box" id="forget-password-box">
+            <div class="forget-password-heading">
+                Reset Password
+            </div>
+            <div class="reset-label my-10">
+                No worries ! <br>
+                Enter your details here and we will sent you an OTP on the registered E-Mail.
+            </div>
+            <div class="forget-password-form">
+                <form action="/reset" method="POST" class="password-form" id="password-form">
+                    <div class="create-label">
+                        <label for="reset-userid" class="reset-label"> Enter Your UserID : </label>
+                         <input type="text" class="reset-input" name='reset-userid' id="reset-userid" placeholder="" required>
+                    </div>
+                    <div class="create-label">
+                        <label for="reset-adhaar" class="reset-label"> Enter Your Adhaar Number : </label>
+                         <input type="text" class="reset-input" name='reset-adhaar' id="reset-adhaar" placeholder="" pattern="[0-9]{12}" required>
+                    </div>
+                    <div>
+                        <input type="submit" class="reset-submit" id="reset-submit" onclick="reset_password()">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../static/js/patient_login_page.js"></script>
+</html>

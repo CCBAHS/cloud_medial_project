@@ -1,0 +1,482 @@
+/* resetting the css */
+* {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* disabling the arrows in the number input */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* main container design */
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-columns: 1fr 5fr 1fr;
+  grid-template-rows: 1fr 5fr 1fr;
+  grid-auto-flow: row;
+  grid-gap: 0.3rem;
+  padding: 0.5rem;
+  background: url("/static/images/Healthcare-Background-Pics.jpg") no-repeat
+    center center/cover;
+}
+
+/* login box design */
+.loginbox {
+  /* border: 1px solid black; */
+  border-radius: 45px;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  /* padding: 1rem; */
+}
+
+/* direct children of the login section */
+.loginbox-child {
+  display: inline-block;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+}
+
+/* welcome part of the login section */
+#loginbox-welcome {
+  float: left;
+  /* background-color: rgba(182, 246, 248, 0.527); */
+  background-color: rgba(255, 255, 255, 0.527);
+  /* background-color: transparent; */
+  border-top-left-radius: 45px;
+  border-bottom-left-radius: 45px;
+  /* color: white; */
+  text-align: center;
+}
+
+/* login part of the login section */
+#loginbox-login {
+  float: right;
+  /* background-color: rgba(255, 255, 255, 0.527); */
+  background-color: rgba(136, 251, 255, 0.3);
+  /* background-color: transparent; */
+  border-top-right-radius: 45px;
+  border-bottom-right-radius: 45px;
+  color: white;
+  text-align: center;
+}
+
+/* welcome heading */
+.welcome-welcome {
+  /* border: 1px solid black; */
+  margin-top: 120px;
+  font-size: 30px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+}
+
+/* underline of the heading */
+.welcome-line {
+  /* border: 1px solid black; */
+  background-color: black;
+  width: 30%;
+  height: 0.9%;
+  margin-top: 10px;
+  /* margin-left: 190px; */
+}
+
+/* intro section of the welcome part */
+.welcome-intro {
+  /* border: 1px solid black; */
+  margin-top: 40px;
+  font-size: 20px;
+  font-family: "Ubuntu", sans-serif;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* heading of the login part */
+.login-signin {
+  /* border: 1px solid black; */
+  margin-top: 90px;
+  font-size: 30px;
+}
+
+/* underline of the heading */
+.login-line {
+  /* border: 1px solid black; */
+  background-color: white;
+  width: 10%;
+  height: 0.8%;
+  margin-top: 5px;
+  /* margin-left: 255px; */
+}
+
+/* form section of the login part */
+.login-form {
+  /* border: 1px solid black; */
+  margin-top: 30px;
+}
+
+/* userid part of the form */
+.signin-userid {
+  /* border: 1px solid black; */
+  /* display: flex; */
+  margin-top: 5px;
+}
+
+/* userid label of the form */
+.userid-label {
+  /* border: 1px solid black; */
+  margin-left: 20px;
+  font-size: 20px;
+  color: white;
+}
+
+/* password section of the form */
+.signin-password {
+  /* border: 1px solid black; */
+  margin-top: 15px;
+}
+
+/* password label of the form */
+.password-label {
+  /* border: 1px solid black; */
+  margin-left: 1px;
+  font-size: 20px;
+  color: white;
+}
+
+/* input of the form */
+.login-input {
+  /* border: 1px solid black; */
+  border-bottom: 1.5px solid white;
+  color: white;
+  font-size: 20px;
+  background: transparent;
+  padding: 5px 10px;
+}
+
+/* submit section of the form */
+.signin-submit {
+  /* border: 1px solid black; */
+  margin-top: 15px;
+}
+
+/* submit button of the form */
+.btn-submit {
+  display: inline-block;
+  width: 50%;
+  font-size: 20px;
+  border-radius: 20px;
+  padding: 10px;
+  cursor: pointer;
+  background-color: aquamarine;
+}
+
+/* button on hover */
+.btn-submit:hover {
+  background-color: transparent;
+  color: white;
+  border: 2px solid aquamarine;
+  border-radius: 15px;
+}
+
+/* forget password section of the form */
+.forget-password {
+  /* border: 1px solid black; */
+  margin-top: 5px;
+}
+
+/* forget password link */
+.forget-password a {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  font-size: 15px;
+}
+
+/* forget password link on hover */
+.forget-password a:hover {
+  color: black;
+  font-weight: bold;
+}
+
+/* account create section */
+.create-account {
+  /* border: 1px solid black; */
+  margin-top: 35px;
+}
+
+/* creaate account button */
+.btn-account {
+  display: inline-block;
+  width: auto;
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: cadetblue;
+  color: white;
+}
+
+/* create account button on hover */
+.btn-account:hover {
+  background-color: transparent;
+  color: black;
+  border: 2px solid cadetblue;
+  border-radius: 15px;
+}
+
+/* account creation section */
+.create-account-box {
+  /* border : 2px solid black; */
+  display: none;
+  border-radius: 45px;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+/* heading of the section */
+.heading-text {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 35px;
+  font-weight: 600;
+}
+
+/* account creation form */
+.create-account-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+/* details sections */
+.create-div {
+  /* border: 1px solid black; */
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  margin-top: 10px;
+  /* margin-left: 10px; */
+}
+
+/* details labels */
+.create-label {
+  padding: 10px 20px;
+  font-size: 20px;
+  margin-left: 80px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+}
+
+/* details input */
+.create-input {
+  /* border: 1px solid black; */
+  border-bottom: 1px solid black;
+  padding: 5px;
+  font-size: 15px;
+  width: 190px;
+  text-align: center;
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+  background: transparent;
+}
+
+/* gender section */
+.create-gender {
+  padding: 5px;
+  font-size: 15px;
+}
+
+.create-iden {
+  padding: 5px;
+  font-size: 15px;
+}
+
+/* radio button input */
+.radio-input {
+  padding: 5px;
+}
+
+/* account creation submit button */
+.create-submit {
+  display: none;
+  width: 30%;
+  font-size: 20px;
+  border-radius: 15px;
+  padding: 5px;
+  cursor: pointer;
+  background-color: aquamarine;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* account creation button on hover */
+.create-submit:hover {
+  background-color: transparent;
+  color: black;
+  border: 2px solid aquamarine;
+  border-radius: 15px;
+}
+
+/* scaling classess */
+.my-10 {
+  margin-top: 10px;
+}
+
+.my-5 {
+  margin-top: 5px;
+}
+
+.mx-5 {
+  margin-left: 12px;
+}
+
+.mx-58 {
+  margin-left: 58px;
+}
+
+.mx-44 {
+  margin-left: 44px;
+}
+
+.mx-25 {
+  margin-left: 25px;
+}
+
+.mx-38 {
+  margin-left: 38px;
+}
+
+.mx-83 {
+  margin-left: 83px;
+}
+
+.mx--23 {
+  margin-left: -23px;
+}
+
+.mx-30 {
+  margin-left: 30px;
+}
+
+.mx--3 {
+  margin-left: -3px;
+}
+
+/* forget password section */
+.forget-password-box {
+  display: none;
+  border-radius: 45px;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: rgba(104, 104, 104, 0.6);
+}
+
+.forget-password-heading {
+  text-align: center;
+  color: white;
+  font-size: 30px;
+  margin-top: 30px;
+  font-weight: bold;
+  font-family: monospace;
+}
+
+.forget-password-form {
+  display: flex;
+  margin: 30px auto;
+  flex-direction: column;
+  align-content: center;
+  align-items: flex-start;
+  justify-content: center;
+  justify-items: center;
+}
+
+.reset-label {
+  color: white;
+  margin-left: 165px;
+  padding: 10px 30px;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+}
+
+.reset-input {
+  color: white;
+  border-bottom: 1px solid white;
+  padding: 5px;
+  font-size: 15px;
+  width: 190px;
+  text-align: center;
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+  background: transparent;
+}
+
+.reset-submit {
+  display: inline-block;
+  width: 30%;
+  font-size: 20px;
+  border-radius: 15px;
+  padding: 5px;
+  cursor: pointer;
+  background-color: aquamarine;
+  margin-top: 25px;
+  margin-left: 410px;
+}
+
+.check {
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+.verification-box {
+  /* border: 1px solid black; */
+  background-color: rgba(255, 255, 255, 0.4);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  border-radius: 45px;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  align-items: center;
+  justify-content: space-evenly;
+  /* padding: 1rem; */
+}
+
+.verification-head {
+  font-weight: bold;
+  font-size: 30px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.verification-btn {
+  width: auto;
+}
+
+#otp-div {
+  display: flex;
+  align-content: center;
+  width: auto;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}

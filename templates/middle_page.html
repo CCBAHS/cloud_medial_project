@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{params.title}}</title>
+    <link rel="stylesheet" href="../static/css/patient_login_page.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;700&family=Ubuntu:ital@1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        {% if params.verify -%}    
+                <div class = "verification-box" id="verification-box">
+                    <div class="verification-head">
+                        UserID has been sent to your registered E-Mail.
+                    </div>
+                    <div class="verification-button">
+                        <button class='btn-submit verification-btn' onClick="location.href='/login'" id='no_reload'>Continue</button>
+                    </div>
+                </div>
+        {% else -%}
+            <div class = "verification-box" id="verification-box">
+                <div class="verification-head">
+                    OTP has been sent to your registered E-Mail.                    
+                </div>
+                <div class="verification-head">
+                    Please enter OTP and we'll Mail you your Password.                    
+                </div>
+                <form method="POST" action="/otp/{{params.username}}">
+                    <div class="create-div">
+                        <label for="otp" class="create-label"> Enter OTP : </label>
+                        <input type="text" class="create-input" name='otp' id="otp" placeholder="" required>
+                    </div>
+                    <div class="verification-button" id="otp-div">
+                        <input type="submit" class='btn-submit verification-btn' id="reset-otp-btn" id='no_reload' value="Verify">                        
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
