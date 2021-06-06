@@ -1,16 +1,23 @@
 # Flask backend 
-from flask import Flask, render_template, request,redirect
+from flask import Flask, render_template, request, redirect, session
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from flask_pymongo import PyMongo
+import base64
+import codecs
+import gridfs
+from ext_classes import secret_keys
 from ext_classes import codes
 from ext_classes import mailingbot
 
+sk = secret_keys()
 app = Flask(__name__)
 
-app.config["MONGO_URI"] = "mongodb://localhost:27017/test"
+app.config["MONGO_URI"] = sk.mongo_uri()
+app.secret_key = sk.session()
 
 mongo = PyMongo(app)
+fs = gridfs.GridFS(mongo.db)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -32,17 +39,42 @@ def login():
         password = request.form['password']
         userid = mongo.db.test_collection.find_one_or_404({"username":username,"password":password})
         print(userid)
-        return redirect(f"/user/{userid['username']}")
+        session['userid'] = userid['username']
+
+        return redirect("/user")
     else:
+        if "userid" in session:
+            return redirect("/user")
         return render_template('patient-login-page.html')
 
-@app.route('/user/<username>')
-def user(username):
+@app.route('/user')
+def user():
     '''
         Creates session for a specific user.
+        Retrives all the data related to the users which is being authenticated to it.
     '''
-    userid = mongo.db.test_collection.find_one_or_404({"username":username})
-    return mongo.send_file(userid['profile_photo'])
+    if "userid" in session:
+        userid = session["userid"]
+        user = mongo.db.test_collection.find_one({'username':userid})
+        name = user['name']
+        city = user['city']
+        img = fs.get(user['id'])
+        base64_data = codecs.encode(img.read(), 'base64')
+        image = base64_data.decode('utf-8')
+        return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image})
+    return redirect('/login')
+
+@app.route('/signout')
+def signout():
+    '''
+        Clears the session data and ends the session for the user.
+    '''
+    if "userid" in session:
+        session.pop("userid", None)
+    
+    return redirect('/')
+
+
 
 
 @app.route('/account', methods=['GET','POST'])
@@ -71,9 +103,10 @@ def account():
         print(filename)
         try:
             if not mongo.db.test_collection.find_one({'adhaar':adhaar}):
-                mongo.save_file(filename,request.files['photo'])
+                id = mongo.save_file(filename,request.files['photo'])
                 print(' Profile Image Saved Successfully')
-                mongo.db.test_collection.insert_one({"name":name,
+                mongo.db.test_collection.insert_one({"id":id,
+                                                    "name":name,
                                                     "dob":dob,
                                                     "gender":gender,
                                                     "title":title,
@@ -91,14 +124,14 @@ def account():
                 print(' Data Object Inserted Successfully ')
                 mailbot = mailingbot()
                 mailbot.send_message(email,{'name':name,'username':username})
+                params ={'title':'Reset Password','verify':True}
+                return render_template('middle_page.html',params=params)
             else:
                 page_not_found(Exception)
         except Exception:
             print(Exception)
-            params ={'title':'Reset Password','verify':True}
-        return render_template('middle_page.html',params=params)
     else:
-        return 'Hello World'
+        return page_not_found(Exception)
 
 @app.route('/reset', methods=['GET','POST'])
 def reset():

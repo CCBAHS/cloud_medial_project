@@ -41,6 +41,15 @@ class codes:
                 json.dump(codes, json_file)
             return code
 
+class secret_keys:
+    def __init__(self):
+        load_dotenv()
+
+    def session(self):
+        return os.getenv('SESSION_SECRET_KEY')
+
+    def mongo_uri(self):
+        return os.getenv('MONGO_URI')
 
 class mailingbot:
     def __init__(self):

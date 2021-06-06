@@ -40,6 +40,7 @@ $(function() {
 		$('.notifications').removeClass('active');
 		$('.stats').removeClass('active');
 		$('.signout').removeClass('active');
+		$('.records').removeClass('active');
 	});
 
     $('.explore').click(function(e) {
@@ -50,7 +51,8 @@ $(function() {
 		$('.home').removeClass('active');
 		$('.notifications').removeClass('active');
 		$('.stats').removeClass('active');
-		$('.signout').removeClass('active');   
+		$('.signout').removeClass('active');
+		$('.records').removeClass('active');   
 	});
 
     $('.notifications').click(function(e) {
@@ -61,7 +63,8 @@ $(function() {
 		$('.explore').removeClass('active');
 		$('.home').removeClass('active');
 		$('.stats').removeClass('active');
-		$('.signout').removeClass('active');   
+		$('.signout').removeClass('active');
+		$('.records').removeClass('active');   
 	});
 
     $('.stats').click(function(e) {
@@ -72,6 +75,19 @@ $(function() {
 		$('.explore').removeClass('active');
 		$('.notifications').removeClass('active');
 		$('.home').removeClass('active');
+		$('.records').removeClass('active');
+		$('.signout').removeClass('active');    
+	});
+    
+	$('.records').click(function(e) {
+		var $this = $(this);		  
+		if (! $('.records').hasClass('active') ) {
+			$this.addClass('active');
+		}   
+		$('.explore').removeClass('active');
+		$('.notifications').removeClass('active');
+		$('.home').removeClass('active');
+		$('.status').removeClass('active');
 		$('.signout').removeClass('active');    
 	});
 
@@ -83,7 +99,8 @@ $(function() {
 		$('.explore').removeClass('active');
 		$('.notifications').removeClass('active');
 		$('.stats').removeClass('active');
-		$('.home').removeClass('active');   
+		$('.home').removeClass('active');
+		$('.records').removeClass('active');   
 	});
 
 });
