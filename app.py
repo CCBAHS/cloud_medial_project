@@ -21,13 +21,71 @@ fs = gridfs.GridFS(mongo.db)
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return " Sorry But a Bad Request "
+    return render_template('error.html')
 
 
 @app.route('/',methods=['GET'])
 def index():
     return render_template('home.html')
 
+
+@app.route('/record', methods=['GET','POST'])
+def record():
+    if "userid" in session:
+        if request.method == 'POST':
+            doctor_id = request.form['docid']
+            patient_id = request.form['patid']
+            date = request.form['date']
+            diagnostic = request.form['diag']
+            diagnostic = diagnostic.replace('\r','').split('\n')
+            disease = request.form['dise']
+            tests = request.form['tests']
+            tests = tests.replace('\r','').split('\n')
+            medicines = request.form['meds']
+            medicines = medicines.replace('\r','').split('\n')
+            if doctor_id == session['userid']:
+                p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
+                if p_id:
+                    print(doctor_id)
+                    print(patient_id)
+                    print(date)
+                    print(diagnostic)
+                    print(disease)
+                    print(tests)
+                    print(medicines)
+                    time_now = datetime.now()
+                    id = mongo.db.doc_database.insert_one({
+                        'doctorID':doctor_id,
+                        'patientID':patient_id,
+                        'date':date,
+                        'diagnostic':diagnostic,
+                        'disease':disease,
+                        'medicines':medicines,
+                        'tests':tests,
+                        'time_created':time_now
+                    })
+                    print("Doctors")
+                    print(id.inserted_id)
+                    mongo.db.pat_database.insert_one({
+                        'id':id.inserted_id,
+                        'patientID':patient_id,
+                        'type_record':'Doctor',
+                        'time_created':time_now
+                    })
+                    return doctor_id
+                else:
+                    return page_not_found(Exception)
+            else:
+                return page_not_found(Exception)
+        else:
+            if session['userid'].startswith('DOC'):
+                return render_template('details_form.html')
+            if session['userid'].startswith('ORG'):
+                return " Adding Data For Organization "
+            if session['userid'].startswith('PAT'):
+                return " No record to be added by patient"
+    else:
+        return redirect('/login')
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -58,10 +116,11 @@ def user():
         user = mongo.db.test_collection.find_one({'username':userid})
         name = user['name']
         city = user['city']
+        title = user['title']
         img = fs.get(user['id'])
         base64_data = codecs.encode(img.read(), 'base64')
         image = base64_data.decode('utf-8')
-        return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image})
+        return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title})
     return redirect('/login')
 
 @app.route('/signout')

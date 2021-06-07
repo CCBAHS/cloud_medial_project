@@ -31,6 +31,7 @@ $(function() {
     }
 	}); 
 
+	// click on the sidebar
     $('.home').click(function(e) {
 		var $this = $(this);		  
 		if (! $('.home').hasClass('active') ) {
@@ -103,4 +104,21 @@ $(function() {
 		$('.records').removeClass('active');   
 	});
 
+	
+
 });
+
+// checkbox = document.getElementById('check-test');
+
+// checkbox.addEventListener('change', e => {
+    
+//     if(e.target.checked){
+// 		console.log('Bye');
+// 		document.getElementById('tests').required = true;
+//     }
+//     else{
+// 		console.log('Hello');
+//         document.getElementById('tests').required = false;
+//     }
+    
+// });
