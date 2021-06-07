@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
+
+      <link rel="stylesheet" href="/static/css/bootstrap.css">
+
+    <link rel="stylesheet" href="/static/css/owl.carousel.css">
+
+    <link rel="stylesheet" href="/static/css/tailwind.css">
+       
+    <link rel="stylesheet" href="/static/css/sidebar.css">
+    <title> Add Record </title>
+</head>
+<body>
+    
+    <section class="text-gray-600 body-font relative bg-blue-200">
+          
+      <div class="container px-5 py-24 mx-auto ">
+          <div class="flex flex-col text-center w-full mb-12 bg-white bg-opacity-25 rounded-lg py-5 shadow-2xl">
+            <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Add Record</h1>
+            
+          <div class="lg:w-1/2 md:w-2/3 mx-auto">
+            <form action="/docrecord" method="POST">
+            <div class="flex flex-wrap -m-2">
+              <div class="p-2 w-1/2">
+                <div class="relative">
+                  <label for="docid" class="leading-7 text-lg text-gray-600"> Doctor's ID </label> 
+                  <input type="text" id="docid" name="docid" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="doctor's id" required>
+                </div>
+              </div>
+              <div class="p-2 w-1/2">
+                <div class="relative">
+                  <label for="patid" class="leading-7 text-lg text-gray-600"> Patient's ID </label>
+                  <input type="text" id="patid" name="patid" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="patient's id" required>
+                </div>
+              </div>
+              <div class="p-2 w-1/2">
+                  <div class="relative">
+                      <label for="date" class="leading-7 text-lg text-gray-600">Date</label>
+                      <input type="date" id="date" name="date" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" required>
+                    </div>
+                </div>
+                <div class="p-2 w-1/2">
+                    <div class="relative">
+                      <label for="dise" class="leading-7 text-lg text-gray-600">Diseases</label>
+                      <input type="text" id="dise" name="dise" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder=" write the dieases from which patient is suffering" required>
+                    </div>
+                  </div>
+              <div class="p-2 w-full">
+                  <div class="relative">
+                      <label for="diag" class="leading-7 text-lg text-gray-600">Diagnostics</label>
+                      <textarea id="diag" name="diag" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out" placeholder="write the diagnostics" required></textarea>
+                    </div>
+                </div>
+                
+              <!-- <div class="p-2 w-1/2">
+                <div class="relative">
+                    <label class="inline-flex items-center">
+                        <input
+                          type="checkbox"
+                          class="rounded bg-gray-200 border-transparent focus:border-transparent focus:bg-gray-200 text-gray-700 focus:ring-1 focus:ring-offset-2 focus:ring-gray-500" id="check-test"/>
+                        <span class="ml-2">Tests Required ?</span> 
+                      </label>
+                </div>
+              </div> -->
+              <div class="p-2 w-full">
+                <div class="relative">
+                  <label for="tests" class="leading-7 text-lg text-gray-600">Tests</label>
+                  <textarea id="tests" name="tests" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out" placeholder="write none if no test required 
+else mention each test in a new line:
+test1
+test2 ..." required></textarea>
+                </div>
+              </div>
+              <div class="p-2 w-full">
+                <div class="relative">
+                  <label for="meds" class="leading-7 text-lg text-gray-600">Medication</label>
+                  <textarea id="meds" name="meds" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out" placeholder="write none if no mediction required 
+else mention each medicine in a new line:
+med1
+med2 ..." required></textarea>
+                </div>
+              </div>
+              <div class="p-2 w-full">
+                <input class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg shadow-md" id="submit" value="Submit" type="submit">
+              </div>
+              
+            </div>
+        </form>
+          </div>
+        </div>
+        </div>
+      </section>
+    
+    
+</body>
+<script src="/static/js/jquery.js"></script>
+  <script src="/static/js/popper.js"></script>
+  <script src="/static/js/bootstrap.js"></script>
+  <script src="/static/js/user_dashboard.js"></script>
+</html>

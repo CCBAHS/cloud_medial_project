@@ -28,64 +28,137 @@ def page_not_found(e):
 def index():
     return render_template('home.html')
 
-
-@app.route('/record', methods=['GET','POST'])
+@app.route('/record',methods=['GET'])
 def record():
     if "userid" in session:
-        if request.method == 'POST':
-            doctor_id = request.form['docid']
-            patient_id = request.form['patid']
-            date = request.form['date']
-            diagnostic = request.form['diag']
-            diagnostic = diagnostic.replace('\r','').split('\n')
-            disease = request.form['dise']
-            tests = request.form['tests']
-            tests = tests.replace('\r','').split('\n')
-            medicines = request.form['meds']
-            medicines = medicines.replace('\r','').split('\n')
-            if doctor_id == session['userid']:
-                p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
-                if p_id:
-                    print(doctor_id)
-                    print(patient_id)
-                    print(date)
-                    print(diagnostic)
-                    print(disease)
-                    print(tests)
-                    print(medicines)
-                    time_now = datetime.now()
-                    id = mongo.db.doc_database.insert_one({
-                        'doctorID':doctor_id,
-                        'patientID':patient_id,
-                        'date':date,
-                        'diagnostic':diagnostic,
-                        'disease':disease,
-                        'medicines':medicines,
-                        'tests':tests,
-                        'time_created':time_now
-                    })
-                    print("Doctors")
-                    print(id.inserted_id)
-                    mongo.db.pat_database.insert_one({
-                        'id':id.inserted_id,
-                        'patientID':patient_id,
-                        'type_record':'Doctor',
-                        'time_created':time_now
-                    })
-                    return doctor_id
+        if session["userid"].startswith("DOC"):
+            return render_template('details_form_doc.html')
+        elif session['userid'].startswith('ORG'):
+            return render_template('records_form_org.html')
+        else:
+            return page_not_found(Exception)
+    else:
+        return redirect('/login')
+
+@app.route('/docrecord', methods=['POST','GET'])
+def docrecord():
+    if "userid" in session:
+        if session['userid'].startswith('DOC'):
+            if request.method == 'POST':
+                doctor_id = request.form['docid']
+                patient_id = request.form['patid']
+                date = request.form['date']
+                diagnostic = request.form['diag']
+                diagnostic = diagnostic.replace('\r','').split('\n')
+                disease = request.form['dise']
+                tests = request.form['tests']
+                tests = tests.replace('\r','').split('\n')
+                medicines = request.form['meds']
+                medicines = medicines.replace('\r','').split('\n')
+                if doctor_id == session['userid']:
+                    p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
+                    if p_id:
+                        print(doctor_id)
+                        print(patient_id)
+                        print(date)
+                        print(diagnostic)
+                        print(disease)
+                        print(tests)
+                        print(medicines)
+                        time_now = datetime.now()
+                        id = mongo.db.doc_database.insert_one({
+                            'doctorID':doctor_id,
+                            'patientID':patient_id,
+                            'date':date,
+                            'diagnostic':diagnostic,
+                            'disease':disease,
+                            'medicines':medicines,
+                            'tests':tests,
+                            'time_created':time_now
+                        })
+                        print("Doctors")
+                        print(id.inserted_id)
+                        mongo.db.pat_database.insert_one({
+                            'id':id.inserted_id,
+                            'patientID':patient_id,
+                            'type_record':'Doctor',
+                            'time_created':time_now
+                        })
+                        return redirect('/user')
+                    else:
+                        return page_not_found(Exception)
                 else:
                     return page_not_found(Exception)
             else:
-                return page_not_found(Exception)
+                return page_not_found(Exception)              
         else:
-            if session['userid'].startswith('DOC'):
-                return render_template('details_form.html')
-            if session['userid'].startswith('ORG'):
-                return " Adding Data For Organization "
-            if session['userid'].startswith('PAT'):
-                return " No record to be added by patient"
+            return redirect('/user')
     else:
         return redirect('/login')
+
+@app.route('/radrecord', methods=['POST','GET'])
+def radrecord():
+    if "userid" in session:
+        if session['userid'].startswith('ORG'):
+            if request.method == 'POST':
+                labtype = "Radiological/Ultrasound"
+                labid = request.form['labid']
+                doctor_id = request.form['docid']
+                patient_id = request.form['patid']
+                date = request.form['date']
+                scantype = request.form['scan']
+                bodypart = request.form['bodypart']
+                observation = request.form['obvs']
+                observation  = observation.replace('\r','').split('\n')
+                impressions = request.form['impr']
+                impressions = impressions.replace('\r','').split('\n')
+                filename = patient_id + ''.join(bodypart.split(' ')) + scantype + ''.join(date.split('-')) + '.png'
+                if labid == session['userid']:
+                    p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
+                    if p_id:
+                        id = mongo.save_file(filename,request.files['scanfile'])
+                        print(' Profile Image Saved Successfully')
+                        print(doctor_id)
+                        print(patient_id)
+                        print(filename)
+                        print(date)
+                        print(scantype)
+                        print(bodypart)
+                        print(observation)
+                        print(impressions)
+                        time_now = datetime.now()
+                        id_org = mongo.db.org_database.insert_one({
+                            'id':id,
+                            'doctorID':doctor_id,
+                            'patientID':patient_id,
+                            'date':date,
+                            'scantype':scantype,
+                            'bodypart':bodypart,
+                            'observation':observation,
+                            'impressions':impressions,
+                            'img_filename':filename,
+                            'time_created':time_now
+                        })
+                        print("Doctors")
+                        print(id_org.inserted_id)
+                        mongo.db.pat_database.insert_one({
+                            'id':id_org.inserted_id,
+                            'patientID':patient_id,
+                            'type_record':'Radiological/Ultrasound',
+                            'time_created':time_now
+                        })
+                        return redirect('/user')
+                    else:
+                        return page_not_found(Exception)
+                else:
+                    return page_not_found(Exception)
+            else:
+                return page_not_found(Exception)               
+        else:
+            return redirect('/user')
+    else:
+        return redirect('/login')
+
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -147,7 +220,6 @@ def account():
         dob = request.form['dob']
         gender = request.form['gender']
         title = request.form['identity']
-        # needed to be changed
         password = request.form['password-create']
         address = request.form['address']
         state = request.form['state']
@@ -157,7 +229,7 @@ def account():
         email = request.form['emailid']
         adhaar = request.form['adhaar']
         time_created = datetime.now()        
-        username = title[:3].upper() + code.statecode(state) + dob.split('-')[0][-2:] + str(code.usernumber(title,state))
+        username = title[:3].upper() + code.statecode(state) + dob.split('-')[0] + str(code.usernumber(title,state))
         filename = username + '.png'
         print(filename)
         try:
