@@ -262,7 +262,55 @@ def pharmadisrecord():
             return redirect('/user')
     else:
         return redirect('/login')
+    pass
 
+@app.route('/pathorecord', methods=['POST','GET'])
+def pathorecord():    
+    if "userid" in session:
+        if session['userid'].startswith('ORG'):
+            if request.method == 'POST':
+                labtype = "Pathology"
+                labid = request.form['labid']
+                patient_id = request.form['patid']
+                date = request.form['date']
+                department_name = request.form['dep']
+                investigation = request.form['inve'].replace('\r','').split('\n')
+                if labid == session['userid']:
+                    p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
+                    if p_id:
+                        print(labtype)
+                        print(labid)
+                        print(department_name)
+                        print(patient_id)
+                        print(date)
+                        print(investigation)
+                        time_now = datetime.now()
+                        id_patho = mongo.db.patho_database.insert_one({
+                            'LaboratoryID':labid,
+                            'department_name':department_name,
+                            'patientID':patient_id,
+                            'date':date,
+                            'investigations':investigation,
+                            'time_created':time_now
+                        })
+                        print(id_patho.inserted_id)
+                        mongo.db.pat_database.insert_one({
+                            'id':id_patho.inserted_id,
+                            'patientID':patient_id,
+                            'type_record':labtype,
+                            'time_created':time_now
+                        })
+                        return redirect('/user')
+                    else:
+                        return page_not_found(Exception)
+                else:
+                    return page_not_found(Exception)
+            else:
+                return page_not_found(Exception)               
+        else:
+            return redirect('/user')
+    else:
+        return redirect('/login')
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -274,6 +322,7 @@ def login():
         password = request.form['password']
         userid = mongo.db.test_collection.find_one_or_404({"username":username,"password":password})
         print(userid)
+
         session['userid'] = userid['username']
 
         return redirect("/user")
@@ -282,12 +331,20 @@ def login():
             return redirect("/user")
         return render_template('patient-login-page.html')
 
+
 @app.route('/user')
 def user():
     '''
         Creates session for a specific user.
         Retrives all the data related to the users which is being authenticated to it.
+        
     '''
+        # pat_database -> patient
+        # doc_database -> doctor
+        # org_database -> radiology
+        # pharma_stock_database -> pharmacy
+        # patho_database -> pthology
+
     if "userid" in session:
         userid = session["userid"]
         user = mongo.db.test_collection.find_one({'username':userid})
@@ -297,8 +354,12 @@ def user():
         img = fs.get(user['id'])
         base64_data = codecs.encode(img.read(), 'base64')
         image = base64_data.decode('utf-8')
+
+        session['title'] = title
+
         return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title})
     return redirect('/login')
+
 
 @app.route('/signout')
 def signout():
@@ -307,6 +368,7 @@ def signout():
     '''
     if "userid" in session:
         session.pop("userid", None)
+        session.pop("title", None)
     
     return redirect('/')
 
@@ -359,7 +421,7 @@ def account():
                 print(' Data Object Inserted Successfully ')
                 mailbot = mailingbot()
                 mailbot.send_message(email,{'name':name,'username':username})
-                params ={'title':'Reset Password','verify':True}
+                params ={'title':'Account Creation','verify':True}
                 return render_template('middle_page.html',params=params)
             else:
                 page_not_found(Exception)

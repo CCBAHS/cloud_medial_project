@@ -8,8 +8,10 @@ import math
 import random
 
 class codes:
-    def statecode(self,state):
+    def __init__(self):
         load_dotenv()
+
+    def statecode(self,state):
         codes = json.loads(os.getenv('STATECODES'))
         state = state.lower()
         return codes[state]
@@ -40,6 +42,13 @@ class codes:
             with open('codes.json','w') as json_file:
                 json.dump(codes, json_file)
             return code
+
+    def month_codes(self,month):
+        month_map = json.loads(os.getenv('MONTHMAP'))
+        return month_map[month]
+
+
+
 
 class secret_keys:
     def __init__(self):
@@ -247,6 +256,9 @@ if __name__ == '__main__':
     # mail.send_message('vp037453@gmail.com',{'name':'Vivek Prasad','username':"DOCBH211"})
     # otp_db = mail.send_otp('vp037453@gmail.com',{'name':'Vivek Prasad','username':"DOCBH211"})
     mail.send_password('vp037453@gmail.com',{'name':'Vivek Prasad','username':"DOCBH211","password":"Helloavjobye"})
+
+    code_bot = codes()
+    print(code_bot.month_codes('05'))
     # otp = input()
     # print(mail.validate_otp(otp_db,otp))
     # code = codes()
