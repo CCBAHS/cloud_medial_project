@@ -115,7 +115,8 @@ def radrecord():
                 filename = patient_id + ''.join(bodypart.split(' ')) + scantype + ''.join(date.split('-')) + '.png'
                 if labid == session['userid']:
                     p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
-                    if p_id:
+                    d_id = mongo.db.test_collection.find_one({'username': doctor_id,'title':'Doctor'})
+                    if p_id and d_id:
                         id = mongo.save_file(filename,request.files['scanfile'])
                         print(' Profile Image Saved Successfully')
                         print(doctor_id)
@@ -129,6 +130,8 @@ def radrecord():
                         time_now = datetime.now()
                         id_org = mongo.db.org_database.insert_one({
                             'id':id,
+                            'LaboratoryID':labid,
+                            'Laboratory Type':labtype,
                             'doctorID':doctor_id,
                             'patientID':patient_id,
                             'date':date,
@@ -144,7 +147,108 @@ def radrecord():
                         mongo.db.pat_database.insert_one({
                             'id':id_org.inserted_id,
                             'patientID':patient_id,
-                            'type_record':'Radiological/Ultrasound',
+                            'type_record':labtype,
+                            'time_created':time_now
+                        })
+                        return redirect('/user')
+                    else:
+                        return page_not_found(Exception)
+                else:
+                    return page_not_found(Exception)
+            else:
+                return page_not_found(Exception)               
+        else:
+            return redirect('/user')
+    else:
+        return redirect('/login')
+
+@app.route('/pharmanewrecord', methods=['POST','GET'])
+def pharmanewrecord():
+    if "userid" in session:
+        if session['userid'].startswith('ORG'):
+            if request.method == 'POST':
+                labtype = "Pharmacy-New Stock"
+                labid = request.form['labid']
+                date = request.form['date']
+                company_name = request.form['compname']
+                medicine_name = request.form['medname']
+                quantity = request.form['quantity'].split('*')
+                boxes = int(quantity[0])
+                strips = int(quantity[1])
+                tablets = int(quantity[2])
+                tottablets = boxes*strips*tablets
+                if labid == session['userid']:
+                    
+                    print(labtype)
+                    print(labid)
+                    print(date)
+                    print(company_name)
+                    print(medicine_name)
+                    print(boxes)
+                    print(strips)
+                    print(tablets)
+                    print(tottablets)
+                    time_now = datetime.now()
+                    mongo.db.pharma_stock_database.insert_one({
+                        'PharmacyID':labid,
+                        'PharmaStockType': labtype,
+                        'date':date,
+                        'company_name':company_name,
+                        'medicine_name':medicine_name,
+                        'quantity_boxes':boxes,
+                        'quantity_strips':strips,
+                        'quantity_tablets':tablets,
+                        'total_tablets':tottablets,
+                        'time_created':time_now
+                    })
+                    print("Data saved into database")
+                    return redirect('/user')
+                    
+                else:
+                    return page_not_found(Exception)
+            else:
+                return page_not_found(Exception)               
+        else:
+            return redirect('/user')
+    else:
+        return redirect('/login')
+
+@app.route('/pharmadisrecord', methods=['POST','GET'])
+def pharmadisrecord():
+    if "userid" in session:
+        if session['userid'].startswith('ORG'):
+            if request.method == 'POST':
+                labtype = "Pharmacy-Dispatched"
+                labid = request.form['labid']
+                doctor_id = request.form['docid']
+                patient_id = request.form['patid']
+                date = request.form['date']
+                medicines = request.form['dispmeds'].replace('\r','').split('\n')
+                if labid == session['userid']:
+                    p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
+                    d_id = mongo.db.test_collection.find_one({'username': doctor_id,'title':'Doctor'})
+                    if p_id and d_id:
+                        print(labtype)
+                        print(labid)
+                        print(doctor_id)
+                        print(patient_id)
+                        print(date)
+                        print(medicines)
+                        time_now = datetime.now()
+                        id_pharma = mongo.db.pharma_stock_database.insert_one({
+                            'PharmacyID':labid,
+                            'PharmaStockType': labtype,
+                            'doctorID':doctor_id,
+                            'patientID':patient_id,
+                            'date':date,
+                            'medicines':medicines,
+                            'time_created':time_now
+                        })
+                        print(id_pharma.inserted_id)
+                        mongo.db.pat_database.insert_one({
+                            'id':id_pharma.inserted_id,
+                            'patientID':patient_id,
+                            'type_record':labtype,
                             'time_created':time_now
                         })
                         return redirect('/user')

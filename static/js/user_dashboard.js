@@ -159,3 +159,30 @@ btn.onclick = function () {
 		document.getElementById('pathology-section').style.display = 'none';
 	}
 };
+
+const btn1 = document.querySelector('#btn-pharma');
+btn1.onclick = function () {
+	const rbs = document.querySelectorAll('input[name="pharmatype"]');
+	let selectedValue;
+	for (const rb of rbs) {
+		if (rb.checked) {
+			selectedValue = rb.value;
+			break;
+		}
+	}
+	if(selectedValue.match('stock')){
+		document.getElementById('new-stock-section').style.display = 'block';
+		document.getElementById('new-dispense-section').style.display = 'none';
+		document.getElementById('pharma-type-section').style.display = 'none';
+	}
+	else if(selectedValue.match('dispense')){
+		document.getElementById('new-dispense-section').style.display = 'block';
+		document.getElementById('new-stock-section').style.display = 'none';
+		document.getElementById('pharma-type-section').style.display = 'none';
+	}
+	else{
+		document.getElementById('pharma-type-section').style.display = 'block';
+		document.getElementById('new-stock-section').style.display = 'none';
+		document.getElementById('new-dispense-sectionn').style.display = 'none';
+	}
+};

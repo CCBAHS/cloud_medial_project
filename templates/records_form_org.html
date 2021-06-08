@@ -223,30 +223,52 @@ impression ..." required></textarea>
         </div>
         </div>
         <div class="container px-5 py-24 mx-auto none" id='pharmacy-section'>
-            <div class="flex flex-col text-center w-full mb-12 bg-white bg-opacity-25 rounded-lg py-5 shadow-2xl">
+          <div class="text-center w-full mb-12 bg-white bg-opacity-25 rounded-lg py-5 shadow-2xl" id="pharma-type-section">
+            <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900"> Type of Organization </h1>
+          
+        <div class="lg:w-1/2 md:w-2/3 mx-auto flex flex-row flex-wrap ">
+            <div class="p-2 w-1/2">
+                <div class="relative">
+                    <input type="radio" id="stock" name="pharmatype" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"  value="stock" required>
+                    <label for="stock" class="leading-7 text-lg text-gray-600"> Add new Stock </label>
+                </div>
+            </div>
+
+            <div class="p-2 w-1/2">
+                <div class="relative">
+                    <input type="radio" id="dispense" name="pharmatype" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" value="dispense" required>
+                    <label for="dispense" class="leading-7 text-lg text-gray-600"> Dispatched Medicines </label>
+                </div>
+            </div>
+            <div class="p-2 w-full">
+               <button class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg shadow-md"  id="btn-pharma" type="submit">Submit</button>
+              </div>
+        </div>
+      </div>
+          
+          
+          
+          <div class="flex flex-col text-center w-full mb-12 bg-white bg-opacity-25 rounded-lg py-5 shadow-2xl none" id="new-stock-section">
               <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Add Record</h1>
               
             <div class="lg:w-1/2 md:w-2/3 mx-auto">
-              <form action="/record" method="POST">
+              
+              <form action="/pharmanewrecord" method="POST">
               <div class="flex flex-wrap -m-2">
+                <div class="p-2 w-full">
+                  <div class="relative">
+                    <label for="labtype" class="leading-7 text-lg text-gray-600"> Organization Type </label> 
+                    <input type="text" id="labtype" name="labtype" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" value="Pharmacy-New Stock" disabled>
+                  </div>
+                </div>
+
                 <div class="p-2 w-1/2">
                   <div class="relative">
                     <label for="labid" class="leading-7 text-lg text-gray-600"> Laboratory's ID </label> 
                     <input type="text" id="labid" name="labid" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="laboratory's id" required>
                   </div>
                 </div>
-                <div class="p-2 w-1/2">
-                  <div class="relative">
-                    <label for="patid" class="leading-7 text-lg text-gray-600"> Patient's ID </label>
-                    <input type="text" id="patid" name="patid" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="patient's id" required>
-                  </div>
-                </div>
-                <div class="p-2 w-1/2">
-                  <div class="relative">
-                      <label for="docid" class="leading-7 text-lg text-gray-600"> Doctor's ID </label> 
-                      <input type="text" id="docid" name="docid" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="doctor's id" required>
-                  </div>
-              </div>
+
               <div class="p-2 w-1/2">
                   <div class="relative">
                       <label for="date" class="leading-7 text-lg text-gray-600">Date</label>
@@ -256,31 +278,96 @@ impression ..." required></textarea>
                   
                 <div class="p-2 w-full">
                     <div class="relative">
-                        <label for="obvs" class="leading-7 text-lg text-gray-600">Observations</label>
-                        <textarea id="obvs" name="obvs" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out" placeholder="observations" required></textarea>
+                        <label for="compname" class="leading-7 text-lg text-gray-600">Company Name</label>
+                        <input type="text" id="compname" name="compname" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="company name" required>
                       </div>
                   </div>
                   
                 <div class="p-2 w-full">
                   <div class="relative">
-                    <label for="impr" class="leading-7 text-lg text-gray-600">Impressions</label>
-                    <textarea id="impr" name="impr" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out" placeholder="write none if no impression required 
-  else mention each impression in a new line:
-  impression
-  impression ..." required></textarea>
+                    <label for="medname" class="leading-7 text-lg text-gray-600">Medicine Name</label>
+                    <input type="text" id="medname" name="medname" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="medicine name-dose(mg/ml)" required>
+                      </div>
                   </div>
+                  <div class="p-2 w-full">
+                    <div class="relative">
+                      <label for="quantity" class="leading-7 text-lg text-gray-600">Total Quantity</label>
+                      <input type="text" id="quantity" name="quantity" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="(packets) x (strip) x (no. of tablets)" required>
+                        </div>
+                    </div>
+
+                    <div class="p-2 w-full">
+                      <input class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg shadow-md" id="stocksubmit" value="Submit" type="submit">
+                    </div>
+
+                  </div>
+                  
+                </form> 
+                  
                 </div>
+                </div>
+
+                
+
+          <div class="flex flex-col text-center w-full mb-12 bg-white bg-opacity-25 rounded-lg py-5 shadow-2xl none" id="new-dispense-section">
+              <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Dispatched Record</h1>
+              
+            <div class="lg:w-1/2 md:w-2/3 mx-auto">
+              
+              <form action="/pharmadisrecord" method="POST">
+              <div class="flex flex-wrap -m-2">
                 <div class="p-2 w-full">
                   <div class="relative">
-                    <label for="file" class="leading-7 text-lg text-gray-600">Files</label>
-                    <input type="file" id="file" name="file" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" accept="image/*" onchange="file_verify()" required>
+                    <label for="labtype" class="leading-7 text-lg text-gray-600"> Organization Type </label> 
+                    <input type="text" id="labtype" name="labtype" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" value="Pharmacy-Dispatched" disabled>
                   </div>
                 </div>
+
+                <div class="p-2 w-1/2">
+                  <div class="relative">
+                    <label for="labid" class="leading-7 text-lg text-gray-600"> Laboratory's ID </label> 
+                    <input type="text" id="labid" name="labid" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="laboratory's id" required>
+                  </div>
+                </div>
+
+                <div class="p-2 w-1/2">
+                  <div class="relative">
+                    <label for="patid" class="leading-7 text-lg text-gray-600"> Patient's ID </label> 
+                    <input type="text" id="patid" name="patid" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="patient's id" required>
+                  </div>
+                </div>
+
+                <div class="p-2 w-1/2">
+                  <div class="relative">
+                    <label for="docid" class="leading-7 text-lg text-gray-600"> Doctor's ID </label> 
+                    <input type="text" id="docid" name="docid" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="doctor's id" required>
+                  </div>
+                </div>
+
+              <div class="p-2 w-1/2">
+                  <div class="relative">
+                      <label for="date" class="leading-7 text-lg text-gray-600">Date</label>
+                      <input type="date" id="date" name="date" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" required>
+                    </div>
+                </div>
+                  
                 <div class="p-2 w-full">
-                  <input class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg shadow-md" id="submit" value="Submit" type="submit">
+                  <div class="relative">
+                    <label for="dispmeds" class="leading-7 text-lg text-gray-600">Medicines</label>
+                    <textarea id="dispmeds" name="dispmeds" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out" placeholder="mention each medicine in a new line:
+(company name) x (medicine name) x (quantity)
+(company name) x (medicine name) x (quantity) 
+..." required></textarea>
+                  </div>
+                </div>
+                
+                
+                <div class="p-2 w-full">
+                  <input class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg shadow-md" id="dispsubmit" value="Submit" type="submit">
                 </div>
                 
               </div>
+
           </form>
             </div>
           </div>
