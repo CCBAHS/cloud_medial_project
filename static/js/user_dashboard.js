@@ -174,6 +174,7 @@ btn1.onclick = function () {
 		document.getElementById('new-stock-section').style.display = 'block';
 		document.getElementById('new-dispense-section').style.display = 'none';
 		document.getElementById('pharma-type-section').style.display = 'none';
+		text-indigo-500,border-indigo-500
 	}
 	else if(selectedValue.match('dispense')){
 		document.getElementById('new-dispense-section').style.display = 'block';
@@ -186,3 +187,44 @@ btn1.onclick = function () {
 		document.getElementById('new-dispense-sectionn').style.display = 'none';
 	}
 };
+
+function change_detail(){
+	document.getElementById('desc_a').onclick = function(){
+		document.getElementById('desc').style.display = 'block';
+		document.getElementById('review').style.display = 'none';
+		document.getElementById('details').style.display = 'none';
+		document.getElementById('desc_a').classList.add("text-indigo-500");  
+		document.getElementById('desc_a').classList.add("border-indigo-500");  
+		document.getElementById('rev_a').classList.remove("text-indigo-500");  
+		document.getElementById('rev_a').classList.remove("border-indigo-500");  
+		document.getElementById('det_a').classList.remove("text-indigo-500");  
+		document.getElementById('det_a').classList.remove("border-indigo-500");  
+	}
+
+	document.getElementById('rev_a').onclick = function(){
+		document.getElementById('review').style.display = 'block';
+		document.getElementById('desc').style.display = 'none';
+		document.getElementById('details').style.display = 'none';		
+		document.getElementById('rev_a').classList.add("text-indigo-500");  
+		document.getElementById('rev_a').classList.add("border-indigo-500");
+		document.getElementById('desc_a').classList.add("border-gray-300");
+		document.getElementById('desc_a').classList.remove("text-indigo-500");  
+		document.getElementById('desc_a').classList.remove("border-indigo-500");  
+		document.getElementById('det_a').classList.remove("text-indigo-500");  
+		document.getElementById('det_a').classList.remove("border-indigo-500"); 
+
+	}
+
+	document.getElementById('det_a').onclick = function(){
+		document.getElementById('details').style.display = 'block';
+		document.getElementById('desc').style.display = 'none';
+		document.getElementById('review').style.display = 'none';
+		document.getElementById('det_a').classList.add("text-indigo-500");  
+		document.getElementById('det_a').classList.add("border-indigo-500"); 
+		document.getElementById('desc_a').classList.add("border-gray-300"); 
+		document.getElementById('rev_a').classList.remove("text-indigo-500");  
+		document.getElementById('rev_a').classList.remove("border-indigo-500");  
+		document.getElementById('desc_a').classList.remove("text-indigo-500");  
+		document.getElementById('desc_a').classList.remove("border-indigo-500"); 
+	}
+}

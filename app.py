@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, redirect, session
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from flask_pymongo import PyMongo
+import os
+import pickle
 import base64
 import codecs
 import gridfs
@@ -28,6 +30,7 @@ def page_not_found(e):
 def index():
     return render_template('home.html')
 
+
 @app.route('/record',methods=['GET'])
 def record():
     if "userid" in session:
@@ -39,6 +42,7 @@ def record():
             return page_not_found(Exception)
     else:
         return redirect('/login')
+
 
 @app.route('/docrecord', methods=['POST','GET'])
 def docrecord():
@@ -55,6 +59,8 @@ def docrecord():
                 tests = tests.replace('\r','').split('\n')
                 medicines = request.form['meds']
                 medicines = medicines.replace('\r','').split('\n')
+                advice = request.form['advice']
+                advice = advice.replace('\r','').split('\n')
                 if doctor_id == session['userid']:
                     p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
                     if p_id:
@@ -65,6 +71,7 @@ def docrecord():
                         print(disease)
                         print(tests)
                         print(medicines)
+                        print(advice)
                         time_now = datetime.now()
                         id = mongo.db.doc_database.insert_one({
                             'doctorID':doctor_id,
@@ -72,6 +79,7 @@ def docrecord():
                             'date':date,
                             'diagnostic':diagnostic,
                             'disease':disease,
+                            'advice':advice,
                             'medicines':medicines,
                             'tests':tests,
                             'time_created':time_now
@@ -95,6 +103,7 @@ def docrecord():
             return redirect('/user')
     else:
         return redirect('/login')
+
 
 @app.route('/radrecord', methods=['POST','GET'])
 def radrecord():
@@ -162,6 +171,7 @@ def radrecord():
     else:
         return redirect('/login')
 
+
 @app.route('/pharmanewrecord', methods=['POST','GET'])
 def pharmanewrecord():
     if "userid" in session:
@@ -212,6 +222,7 @@ def pharmanewrecord():
             return redirect('/user')
     else:
         return redirect('/login')
+
 
 @app.route('/pharmadisrecord', methods=['POST','GET'])
 def pharmadisrecord():
@@ -264,6 +275,7 @@ def pharmadisrecord():
         return redirect('/login')
     pass
 
+
 @app.route('/pathorecord', methods=['POST','GET'])
 def pathorecord():    
     if "userid" in session:
@@ -312,6 +324,7 @@ def pathorecord():
     else:
         return redirect('/login')
 
+
 @app.route('/login', methods=['GET','POST'])
 def login():
     '''
@@ -356,9 +369,117 @@ def user():
         image = base64_data.decode('utf-8')
 
         session['title'] = title
+        mon_code = codes()
+        # Dashboard 1 -> Patient
+        if session['title'] == 'Patient':
+            
+            
+            if os.path.exists(os.path.join('temp',f'{userid}_temp.pkl')):
+                with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
+                    data = pickle.load(f)
+                meta_data = data['meta_data']
+                records = data['data']
+            
+            else:
+                doc_pat_records = 0
+                lab_pat_records = 0
+                pharma_pat_records = 0
+                records = list()
+                print('Patient')
+                pat_records = mongo.db.pat_database.find({'patientID':userid})
+                print(pat_records)
+                for x in pat_records:
+                    if x['type_record'].startswith('Doc'):
+                        data = mongo.db.doc_database.find_one({'patientID':userid,'_id':x['id']})
+                        if data:
+                            doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                            data['doc_name'] = doc_name['name']
+                            data['category'] = 'Appointment'
+                            data['heading'] = data['disease']
+                            data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                            data['day'] = data['date'].split('-')[-1]
+                            doc_pat_records+=1
+                            records.append(data)
+                    elif x['type_record'].startswith('Radio'):
+                        data = mongo.db.org_database.find_one({'patientID':userid,'_id':x['id']})
+                        if data:
+                            doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                            data['doc_name'] = doc_name['name']
+                            data['category'] = 'Radiology/Ultrasound'
+                            data['heading'] = data['scantype']
+                            data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                            data['day'] = data['date'].split('-')[-1]
+                            records.append(data)
+                            lab_pat_records+=1
+                    elif x['type_record'].startswith('Pharm'):
+                        data = mongo.db.pharma_stock_database.find_one({'patientID':userid,'_id':x['id']})
+                        if data:
+                            doc_name = mongo.db.test_collection.find_one({'username':data['PharmacyID']})
+                            data['doc_name'] = doc_name['name']
+                            data['category'] = 'Pharmacy'
+                            data['heading'] = 'Medications'
+                            data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                            data['day'] = data['date'].split('-')[-1]
+                            records.append(data)
+                            pharma_pat_records+=1
+                    elif x['type_record'].startswith('Patho'):
+                        data = mongo.db.patho_database.find_one({'patientID':userid,'_id':x['id']})
+                        if data:
+                            doc_name = mongo.db.test_collection.find_one({'username':data['LaboratoryID']})
+                            data['doc_name'] = doc_name['name']
+                            data['category'] = 'Pathology'
+                            data['heading'] = data['department_name']
+                            data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                            data['day'] = data['date'].split('-')[-1]
+                            records.append(data)
+                            lab_pat_records+=1
+            
+                meta_data = {'appointment':doc_pat_records,'pharmacy':pharma_pat_records,'laboratory':lab_pat_records}
 
-        return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title})
+                with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                    pickle.dump({'meta_data':meta_data,'data':records},f)
+
+        # Dashboard 2 -> Doctor
+        if session['title'] == 'Doctor':
+            print('Doctor')
+            pass
+
+        # Dashboard 3 -> Organization
+        if session['title'] == 'Organization':
+            print('Organization')
+            pass
+        
+        
+
+        return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
+
     return redirect('/login')
+
+
+@app.route('/record_detail<int:sno>')
+def record_detail(sno):
+    if 'userid' in session:
+        userid = session['userid']
+        with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
+            data = pickle.load(f)
+        print(sno)
+        print(data['data'])
+        data = data['data'][sno-1]
+        print(data)
+        if data['category'].startswith('App'):
+            params = {'prescription':data['medicines'],
+                    'advice':data['advice'],
+                    'diagnostic':data['tests']}
+
+            return render_template('record.html',params=params)
+        elif data['category'].startswith('Rad'):
+            return data['category'],data
+        elif data['category'].startswith('Pat'):
+            return data['category'],data
+        elif data['category'].startswith('Pha'):
+            return data['category'],data
+    else:
+        return redirect('/login')
 
 
 @app.route('/signout')
@@ -371,8 +492,6 @@ def signout():
         session.pop("title", None)
     
     return redirect('/')
-
-
 
 
 @app.route('/account', methods=['GET','POST'])
@@ -430,6 +549,7 @@ def account():
     else:
         return page_not_found(Exception)
 
+
 @app.route('/reset', methods=['GET','POST'])
 def reset():
     '''
@@ -451,6 +571,7 @@ def reset():
             page_not_found(Exception)
     else:
         return 'Hello World'
+
 
 @app.route('/otp/<username>',methods=['GET','POST'])
 def otp(username):

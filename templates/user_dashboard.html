@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="/static/css/sidebar.css">
 
     <title>{{params.name}}</title>
+
+
   </head>
   <body>
   
@@ -68,25 +70,21 @@
       
     </aside>
 
-    <main>
+    <main id="main-section">
 
       <section class="text-gray-600 body-font" id="stats">
         <div class="container px-5 py-24 mx-auto">
-          <div class="flex flex-wrap -m-4 text-center">
-            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">2.7K</h2>
+          <div class="flex flex-wrap -m-4 text-center justify-center record-group">
+            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer mx-1">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{params.meta_data.appointment}}</h2>
               <p class="leading-relaxed">Appointment Records</p>
             </div>
-            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">1.8K</h2>
+            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer mx-1">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{params.meta_data.pharmacy}}</h2>
               <p class="leading-relaxed">Pharmacy Records</p>
             </div>
-            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">35</h2>
-              <p class="leading-relaxed">Medical Records</p>
-            </div>
-            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">4</h2>
+            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer mx-1">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{params.meta_data.laboratory}}</h2>
               <p class="leading-relaxed">Laboratory Records</p>
             </div>
           </div>
@@ -103,123 +101,31 @@
 
         <div class="container px-5 py-24 mx-auto ">
           <div class="flex flex-wrap -mx-4 -my-8 ">
-            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer hover:bg-opacity-25 hover:bg-blue-200 my-1">
-              <div class="h-full flex items-start">
-                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">Jul</span>
-                  <span class="font-medium text-lg text-gray-800 title-font leading-none">18</span>
-                </div>
-                <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-xl font-medium text-gray-900 mb-3">The 400 Blows</h1>
-                  <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
-                  <a class="inline-flex items-center">
-                    <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
-                    <span class="flex-grow flex flex-col pl-3">
-                      <span class="title-font font-medium text-gray-900">Alper Kamu</span>
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer hover:bg-opacity-25 hover:bg-blue-200 my-1">
-              <div class="h-full flex items-start">
-                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">Jul</span>
-                  <span class="font-medium text-lg text-gray-800 title-font leading-none">18</span>
-                </div>
-                <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-xl font-medium text-gray-900 mb-3">The 400 Blows</h1>
-                  <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
-                  <a class="inline-flex items-center">
-                    <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
-                    <span class="flex-grow flex flex-col pl-3">
-                      <span class="title-font font-medium text-gray-900">Alper Kamu</span>
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer hover:bg-opacity-25 hover:bg-blue-200 my-1">
-              <div class="h-full flex items-start">
-                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">Jul</span>
-                  <span class="font-medium text-lg text-gray-800 title-font leading-none">18</span>
-                </div>
-                <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-xl font-medium text-gray-900 mb-3">The 400 Blows</h1>
-                  <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
-                  <a class="inline-flex items-center">
-                    <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
-                    <span class="flex-grow flex flex-col pl-3">
-                      <span class="title-font font-medium text-gray-900">Alper Kamu</span>
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
+            {% for i in params.records %}
             
             <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer hover:bg-opacity-25 hover:bg-blue-200 my-1">
               <div class="h-full flex items-start">
                 <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">Jul</span>
-                  <span class="font-medium text-lg text-gray-800 title-font leading-none">18</span>
+                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">{{i.mon}}</span>
+                  <span class="font-medium text-lg text-gray-800 title-font leading-none">{{i.day}}</span>
                 </div>
                 <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-xl font-medium text-gray-900 mb-3">The 400 Blows</h1>
-                  <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
+                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
+                  <a href="/record_detail{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
+                  <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
                   <a class="inline-flex items-center">
                     <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
                     <span class="flex-grow flex flex-col pl-3">
-                      <span class="title-font font-medium text-gray-900">Alper Kamu</span>
+                      <span class="title-font font-medium text-gray-900">{{i.doc_name}}</span>
                     </span>
                   </a>
                 </div>
               </div>
             </div>
+
+            {% endfor %}
             
-            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer hover:bg-opacity-25 hover:bg-blue-200 my-1">
-              <div class="h-full flex items-start">
-                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">Jul</span>
-                  <span class="font-medium text-lg text-gray-800 title-font leading-none">18</span>
-                </div>
-                <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-xl font-medium text-gray-900 mb-3">The 400 Blows</h1>
-                  <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
-                  <a class="inline-flex items-center">
-                    <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
-                    <span class="flex-grow flex flex-col pl-3">
-                      <span class="title-font font-medium text-gray-900">Alper Kamu</span>
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer hover:bg-opacity-25 hover:bg-blue-200 my-1">
-              <div class="h-full flex items-start">
-                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">Jul</span>
-                  <span class="font-medium text-lg text-gray-800 title-font leading-none">18</span>
-                </div>
-                <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">CATEGORY</h2>
-                  <h1 class="title-font text-xl font-medium text-gray-900 mb-3">The 400 Blows</h1>
-                  <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p>
-                  <a class="inline-flex items-center">
-                    <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
-                    <span class="flex-grow flex flex-col pl-3">
-                      <span class="title-font font-medium text-gray-900">Alper Kamu</span>
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
+           
             
           </div>
         </div>
@@ -228,10 +134,13 @@
     </main>
     
     
+
+    
   </body>
   
       <script src="/static/js/jquery.js"></script>
       <script src="/static/js/popper.js"></script>
       <script src="/static/js/bootstrap.js"></script>
       <script src="/static/js/user_dashboard.js"></script>
+
 </html>
