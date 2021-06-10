@@ -34,23 +34,24 @@
           <div class="lg:w-4/5 mx-auto flex flex-wrap">
             <div class="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
               <h2 class="text-sm title-font text-gray-500 tracking-widest">{{params.date}}</h2>
-              <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{params.doc_name}}</h1>
+              <h2 class="text-sm title-font text-gray-500 tracking-widest">{{params.scantype}} by Dr. {{params.doc_name}}</h2>
+              <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{params.bodypart}}</h1>
               <div class="flex mb-4">
-                <a href="#desc" class="flex-grow text-indigo-500 border-b-2 border-indigo-500 py-2 text-lg px-1 cursor-pointer" id="desc_a" onclick="change_detail();">Prescription</a>
-                <a href="#review" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 cursor-pointer"id="rev_a" onclick="change_detail();">General Advice</a>
-                <a href="#details" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 cursor-pointer"id="det_a" onclick="change_detail();">Diagnostic Tests</a>
+                <a href="#obvs" class="flex-grow text-indigo-500 border-b-2 border-indigo-500 py-2 text-lg px-1 cursor-pointer" id="obvs_a" onclick="change_detail1();">Observations</a>
+                <a href="#impr" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 cursor-pointer"id="impr_a" onclick="change_detail1();">Impressions</a>
+                <!-- <a href="#details" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1 cursor-pointer"id="det_a" onclick="change_detail();">Diagnostic Tests</a> -->
               </div>
               
-              <div  id = "desc">
-              {% for i in params.prescription %}
+              <div  id = "obvs">
+              {% for i in params.observation %}
                 <p class="leading-relaxed mb-4 text-black">                    
                   {{loop.index}}. {{i}}
                 </p>
                 {% endfor %}
             </div>
 
-            <div class="none" id = "review">
-              {% for i in params.advice %}
+            <div class="none" id = "impr">
+              {% for i in params.impressions %}
                 <p class="leading-relaxed mb-4 text-black">                    
                   {{loop.index}}. {{i}}
                 </p>
@@ -58,13 +59,13 @@
             </div>
               
 
-            <div class="none" id = "details">
+            <!-- <div class="none" id = "details">
                     {% for i in params.diagnostic %}
                       <p class="leading-relaxed mb-4 text-black">                    
                         {{loop.index}}. {{i}}
                       </p>
                       {% endfor %}
-                    </div>
+                    </div> -->
               
               <div class="flex">
                 
@@ -78,7 +79,9 @@
 
               </div>
             </div>
-            <img alt="appointment" class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded" src="/static/images/Sedera-Doctor-002_with-background-1.png">
+            <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mx-1">
+                <img class="object-cover object-center rounded" alt="Scan/Report" src="data:image/png;base64, {{params.image}}">
+              </div>
           </div>
         </div>
       </section>

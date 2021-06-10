@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../static/css/tailwind.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <link rel="stylesheet" href="/static/css/tailwind.css">
+
+    <style>
+      .modal {
+        transition: opacity 0.25s ease;
+      }
+      body.modal-active {
+        overflow-x: hidden;
+        overflow-y: visible !important;
+      }
+    </style>
+    
+
     <title>BTHS</title> 
     
 </head>
@@ -31,6 +43,8 @@
           
         </div>
       </header> 
+
+
       <hr> 
       <section class="text-gray-600 body-font">
         <div class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
@@ -39,12 +53,11 @@
               <br class="hidden lg:inline-block">
             </h1>
             <p class="mb-8 leading-relaxed">
-              Our goal at BTHS is to create the infrastructure that will support the country's integrated digital health infrastructure. Through digital highways, it will close the distance between the various stakeholders in the healthcare ecosystem.
+              BTHS was created with the goal of providing a secure platform for storing and managing all data in the healthcare system. We used cloud computing technology to securely store data in the cloud, making data storage and access much easier and faster for the relevant stakeholders. Our integrated system collects, cleans, stores, monitors, reviews, and reports on registry data from various pharmacies and laboratories, determining the data's utility for meeting registry goals and evaluating patient outcomes. This platform manages the pharmaceutical department's stock, prescription integration, Ward Request, Stock Management, Stock Moment, and intelligent reports. It will store and access huge amounts of real-time data of patients, doctors, and available infrastructures in an organisation quickly and safely in the healthcare ecosystem, which will be critical in making fast and accurate decisions for the concerned stakeholders and thus increasing the efficiency of the healthcare system.
             </p>
-            <div class="flex justify-center">
-              <button class="inline-flex text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg">Know More</button>
-            </div>
+
           </div>
+          
           <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
             <img class="object-cover object-center rounded" alt="hero" src="/static/images/doctor_time_pressure_workflow_efficiency_4.jpg">
         </div>
@@ -58,73 +71,73 @@
           <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">About Us</h1>         
         </div>
         <section class="text-gray-600 body-font">
-          <div class="container px-5 py-24 mx-auto">
+          <div class="container px-5 py-10 mx-auto">
             <div class="xl:w-1/2 lg:w-3/4 w-full mx-auto text-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline-block w-8 h-8 text-gray-400 mb-8" viewBox="0 0 975.036 975.036">
                 <path d="M925.036 57.197h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.399 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l36 76c11.6 24.399 40.3 35.1 65.1 24.399 66.2-28.6 122.101-64.8 167.7-108.8 55.601-53.7 93.7-114.3 114.3-181.9 20.601-67.6 30.9-159.8 30.9-276.8v-239c0-27.599-22.401-50-50-50zM106.036 913.497c65.4-28.5 121-64.699 166.9-108.6 56.1-53.7 94.4-114.1 115-181.2 20.6-67.1 30.899-159.6 30.899-277.5v-239c0-27.6-22.399-50-50-50h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.4 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l35.9 75.8c11.601 24.399 40.501 35.2 65.301 24.399z"></path>
               </svg>
-              <p class="leading-relaxed text-lg">Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1 kinfolk. Single-origin coffee ennui shaman taiyaki vape DIY tote bag drinking vinegar cronut adaptogen squid fanny pack vaporware. Man bun next level coloring book skateboard four loko knausgaard. Kitsch keffiyeh master cleanse direct trade indigo juice before they sold out gentrify plaid gastropub normcore XOXO 90's pickled cindigo jean shorts. Slow-carb next level shoindigoitch ethical authentic, yr scenester sriracha forage franzen organic drinking vinegar.</p>
+              <p class="leading-relaxed text-lg">
+                Healthcare data is increasingly digitised, and data is increasing in Velocity, Volume, and Value, just as it is in most other industries. Our systems deal with data pertaining to the activities of providers and health organisations. We are tasked with not only organising medical data, but also integrating it and enabling its analysis in order to improve patient care and derive insights that can improve medical outcomes, all while protecting the data's privacy and security. We develop a holistic view of patients, households, and patient groups. Our goal is to improve patient care. Patients frequently require treatment from multiple healthcare providers. Healthcare facilities must be able to access common health records through BTHS. Because it is free, our digital network for exchanging healthcare data creates efficiencies and cost savings.
+              </p>
               <span class="inline-block h-1 w-10 rounded bg-indigo-500 mt-8 mb-6"></span>
               
             </div>
           </div>
         </section>
         <section class="text-gray-600 body-font">
-            <div class="container px-5 py-24 mx-auto">
+            <div class="container px-5 py-10 mx-auto">
               <div class="flex flex-col text-center w-full mb-20">
-                <h1 class="text-2xl font-medium title-font mb-4 text-gray-900 tracking-widest">OUR TEAM</h1>
+                <h1 class="text-2xl font-medium title-font mb-4 text-gray-900 tracking-widest">Our Team</h1>
                 <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical gentrify, subway tile poke farm-to-table. Franzen you probably haven't heard of them.</p>
               </div>
               <div class="flex flex-wrap -m-4">
                 <div class="p-4 lg:w-1/2">
                   <div class="h-full flex sm:flex-row flex-col items-center sm:justify-start justify-center text-center sm:text-left">
-                    <img alt="team" class="flex-shrink-0 rounded-lg w-48 h-48 object-cover object-center sm:mb-0 mb-4" src="https://dummyimage.com/200x200">
+                    <!-- <img alt="team" class="flex-shrink-0 rounded-lg w-48 h-48 object-cover object-center sm:mb-0 mb-4" src="https://dummyimage.com/200x200"> -->
+                    <div class="flex-grow sm:pl-8">
+                      <h2 class="title-font font-medium text-lg text-gray-900">Aryaa Singh</h2>
+                      <h3 class="text-gray-500 mb-3">Designer, Content Writter</h3>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4 lg:w-1/2">
+                  <div class="h-full flex sm:flex-row flex-col items-center sm:justify-start justify-center text-center sm:text-left">
+                    <!-- <img alt="team" class="flex-shrink-0 rounded-lg w-48 h-48 object-cover object-center sm:mb-0 mb-4" src="https://dummyimage.com/200x200"> -->
                     <div class="flex-grow sm:pl-8">
                       <h2 class="title-font font-medium text-lg text-gray-900">Varun Iyengar</h2>
                       <h3 class="text-gray-500 mb-3">Developer</h3>
-                      <p class="mb-4">DIY tote bag drinking vinegar cronut adaptogen squid fanny pack vaporware.</p>
-                      <span class="inline-flex">
-                        
-                      </span>
+                      
                     </div>
                   </div>
                 </div>
                 <div class="p-4 lg:w-1/2">
                   <div class="h-full flex sm:flex-row flex-col items-center sm:justify-start justify-center text-center sm:text-left">
-                    <img alt="team" class="flex-shrink-0 rounded-lg w-48 h-48 object-cover object-center sm:mb-0 mb-4" src="https://dummyimage.com/201x201">
+                    <!-- <img alt="team" class="flex-shrink-0 rounded-lg w-48 h-48 object-cover object-center sm:mb-0 mb-4" src="https://dummyimage.com/201x201"> -->
                     <div class="flex-grow sm:pl-8">
                       <h2 class="title-font font-medium text-lg text-gray-900">Vivek Prasad</h2>
                       <h3 class="text-gray-500 mb-3">Developer</h3>
-                      <p class="mb-4">DIY tote bag drinking vinegar cronut adaptogen squid fanny pack vaporware.</p>
-                      <span class="inline-flex">
-                        
-                      </span>
+                      
                     </div>
                   </div>
                 </div>
                 <div class="p-4 lg:w-1/2">
                   <div class="h-full flex sm:flex-row flex-col items-center sm:justify-start justify-center text-center sm:text-left">
-                    <img alt="team" class="flex-shrink-0 rounded-lg w-48 h-48 object-cover object-center sm:mb-0 mb-4" src="https://dummyimage.com/204x204">
+                    <!-- <img alt="team" class="flex-shrink-0 rounded-lg w-48 h-48 object-cover object-center sm:mb-0 mb-4" src="https://dummyimage.com/204x204"> -->
                     <div class="flex-grow sm:pl-8">
                       <h2 class="title-font font-medium text-lg text-gray-900">Sumit Chahar</h2>
                       <h3 class="text-gray-500 mb-3">Developer</h3>
-                      <p class="mb-4">DIY tote bag drinking vinegar cronut adaptogen squid fanny pack vaporware.</p>
-                      <span class="inline-flex">
-                        
-                      </span>
+                      
                     </div>
                   </div>
                 </div>
                 <div class="p-4 lg:w-1/2">
                   <div class="h-full flex sm:flex-row flex-col items-center sm:justify-start justify-center text-center sm:text-left">
-                    <img alt="team" class="flex-shrink-0 rounded-lg w-48 h-48 object-cover object-center sm:mb-0 mb-4" src="https://dummyimage.com/206x206">
+                    <!-- <img alt="team" class="flex-shrink-0 rounded-lg w-48 h-48 object-cover object-center sm:mb-0 mb-4" src="https://dummyimage.com/206x206"> -->
                     <div class="flex-grow sm:pl-8">
                       <h2 class="title-font font-medium text-lg text-gray-900">Preet Viradiya</h2>
                       <h3 class="text-gray-500 mb-3">Developer</h3>
-                      <p class="mb-4">DIY tote bag drinking vinegar cronut adaptogen squid fanny pack vaporware.</p>
-                      <span class="inline-flex">
-                        
-                      </span>
+                      
                     </div>
                   </div>
                 </div>
@@ -471,7 +484,7 @@
                 <span class="ml-3 text-xl">BTHS</span>
               </a>
               <p class="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">
-                  Fully connected and secured Healthcare System at your fingertips.
+                BTHS is a sustainable workflow model that can be seamlessly integrated into the day-to-day clinical practise of active physicians, nurses, pharmacists, and patients.
                 
               </p>
               <span class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
@@ -500,4 +513,12 @@
             </div>
        </footer>
 </body>
+
+
+
 </html>
+
+
+
+
+<!--    This platform handles complete order management, custom reports, smart notifications, Credit Settlement, detailed MIS Reports, Analytics and App for Phlebotomist in Lab Management.  Our system will also assist patients in connecting with doctors across the country and obtaining online consultations with them. It will bridge the gap between various stakeholders in the healthcare ecosystem and assist us in achieving our goal of developing the infrastructure required to support an integrated digital healthcare system. -->
