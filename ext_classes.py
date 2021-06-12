@@ -48,8 +48,6 @@ class codes:
         return month_map[month]
 
 
-
-
 class secret_keys:
     def __init__(self):
         load_dotenv()
@@ -59,6 +57,7 @@ class secret_keys:
 
     def mongo_uri(self):
         return os.getenv('MONGO_URI')
+
 
 class mailingbot:
     def __init__(self):
@@ -250,6 +249,7 @@ class mailingbot:
         if otp_db == otp:
             return True
         return False
+
 
 if __name__ == '__main__':
     mail = mailingbot()

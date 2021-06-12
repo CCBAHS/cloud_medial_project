@@ -1,14 +1,21 @@
-# Flask backend 
-from flask import Flask, render_template, request, redirect, session
-from datetime import datetime
-from werkzeug.utils import secure_filename
-from flask_pymongo import PyMongo
-# from flask_socketio import SocketIO, emit
+#  important libraries
 import os
 import pickle
+from datetime import datetime
+from werkzeug.utils import secure_filename
 import base64
 import codecs
 import gridfs
+import json
+import requests
+
+# Flask backend 
+from flask import Flask, render_template, request, redirect, session, g
+from flask_pymongo import PyMongo
+from flask_track_usage import TrackUsage
+from flask_track_usage.storage.mongo import MongoStorage
+
+# using external classes
 from ext_classes import secret_keys
 from ext_classes import codes
 from ext_classes import mailingbot
@@ -22,15 +29,13 @@ app.secret_key = sk.session()
 mongo = PyMongo(app)
 fs = gridfs.GridFS(mongo.db)
 
+app.config['TRACK_USAGE_USE_FREEGEOIP'] = True
+app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://extreme-ip-lookup.com/json/{ip}'
+app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'include'
 
-# socketio = SocketIO(app)
+mstorage = MongoStorage('test','tracker')
 
-
-# @socketio.on('disconnect')
-# def disconnect_user():
-#     print('Bye')
-#     signout()
-
+t = TrackUsage(app,[mstorage])
 
 
 @app.errorhandler(404)
@@ -38,14 +43,23 @@ def page_not_found(e):
     return render_template('error.html')
 
 
+@t.include
 @app.route('/',methods=['GET'])
 def index():
+    
+    url = "http://extreme-ip-lookup.com/json/{}".format(request.remote_addr)
+    r = requests.get(url)
+    j = json.loads(r.text)
+    print(j)
     return render_template('home.html')
 
 
+@t.include
 @app.route('/record',methods=['GET'])
 def record():
     if "userid" in session:
+        g.track_var['userid'] = session["userid"]
+
         if session["userid"].startswith("DOC"):
             return render_template('details_form_doc.html')
         elif session['userid'].startswith('ORG'):
@@ -56,9 +70,11 @@ def record():
         return redirect('/login')
 
 
+@t.include
 @app.route('/docrecord', methods=['POST','GET'])
 def docrecord():
     if "userid" in session:
+        g.track_var['userid'] = session["userid"]
         if session['userid'].startswith('DOC'):
             if request.method == 'POST':
                 doctor_id = request.form['docid']
@@ -117,9 +133,11 @@ def docrecord():
         return redirect('/login')
 
 
+@t.include
 @app.route('/radrecord', methods=['POST','GET'])
 def radrecord():
     if "userid" in session:
+        g.track_var['userid'] = session["userid"]
         if session['userid'].startswith('ORG'):
             if request.method == 'POST':
                 labtype = "Radiological/Ultrasound"
@@ -184,9 +202,11 @@ def radrecord():
         return redirect('/login')
 
 
+@t.include
 @app.route('/pharmanewrecord', methods=['POST','GET'])
 def pharmanewrecord():
     if "userid" in session:
+        g.track_var['userid'] = session["userid"]
         if session['userid'].startswith('ORG'):
             if request.method == 'POST':
                 labtype = "Pharmacy-New Stock"
@@ -236,9 +256,11 @@ def pharmanewrecord():
         return redirect('/login')
 
 
+@t.include
 @app.route('/pharmadisrecord', methods=['POST','GET'])
 def pharmadisrecord():
     if "userid" in session:
+        g.track_var['userid'] = session["userid"]
         if session['userid'].startswith('ORG'):
             if request.method == 'POST':
                 labtype = "Pharmacy-Dispatched"
@@ -288,9 +310,11 @@ def pharmadisrecord():
     pass
 
 
+@t.include
 @app.route('/pathorecord', methods=['POST','GET'])
 def pathorecord():    
     if "userid" in session:
+        g.track_var['userid'] = session["userid"]
         if session['userid'].startswith('ORG'):
             if request.method == 'POST':
                 labtype = "Pathology"
@@ -337,6 +361,7 @@ def pathorecord():
         return redirect('/login')
 
 
+@t.include
 @app.route('/login', methods=['GET','POST'])
 def login():
     '''
@@ -346,9 +371,46 @@ def login():
         username = request.form['userid']
         password = request.form['password']
         userid = mongo.db.test_collection.find_one_or_404({"username":username,"password":password})
-        print(userid)
+        # print(userid)
+
+        g.username = username
+        # adding the user to active user's list
+        # popping the data of user if found in active users but not in session variable
+        if os.path.exists(os.path.join('temp','activeusers.pkl')):
+            with open(os.path.join('temp','activeusers.pkl'),'rb') as f:
+                activeusers = pickle.load(f)
+            
+            user = activeusers['users']
+            print(user)
+            if username in user:
+                # not logged out but closed the browser
+                print(True)
+                if os.path.exists(os.path.join('temp',f'{username}_temp.pkl')):
+                    print('yes')
+                    os.remove(os.path.join('temp',f'{username}_temp.pkl'))
+                    user.remove(username)
+                    print(user)
+
+            user.append(username)
+            print(user)
+            activeusers['users'] = user
+            with open(os.path.join('temp','activeusers.pkl'),'wb') as f:
+                pickle.dump(activeusers,f)
+               
+
+        else:
+            if not os.path.exists('temp'):
+                os.mkdir('temp')
+            activeusers = dict()
+            users = list()
+            users.append(username)
+            activeusers['users'] = users
+            with open(os.path.join('temp','activeusers.pkl'),'wb') as f:
+                pickle.dump(activeusers,f)
+            print(users)  
 
         session['userid'] = userid['username']
+        session["time_first_entry"] = datetime.now()
 
         return redirect("/user")
     else:
@@ -357,6 +419,7 @@ def login():
         return render_template('patient-login-page.html')
 
 
+@t.include
 @app.route('/user')
 def user():
     '''
@@ -370,7 +433,11 @@ def user():
         # pharma_stock_database -> pharmacy
         # patho_database -> pthology
 
+    #security check if user has closed the browser and no data remains in the session  
+    
+
     if "userid" in session:
+        g.track_var['userid'] = session["userid"]
         userid = session["userid"]
         user = mongo.db.test_collection.find_one({'username':userid})
         name = user['name']
@@ -382,6 +449,7 @@ def user():
 
         session['title'] = title
         mon_code = codes()
+
         # Dashboard 1 -> Patient
         if session['title'] == 'Patient':
             
@@ -394,9 +462,9 @@ def user():
                     data = pickle.load(f)
                 meta_data = data['meta_data']
                 records = data['data']
-                if 'time_first_entry' not in session:
-                    session['time_first_entry'] = datetime.now()
+                
                 pat_records = mongo.db.pat_database.find({'patientID':userid,"time_created":{"$gt":session['time_first_entry']}})
+
                 if pat_records:
                     for x in pat_records:
                         if x['type_record'].startswith('Doc'):
@@ -452,7 +520,6 @@ def user():
             else:
                 if not os.path.exists('temp'):
                     os.mkdir('temp')
-                session["time_first_entry"] = datetime.now()
                 doc_pat_records = 0
                 lab_pat_records = 0
                 pharma_pat_records = 0
@@ -508,15 +575,19 @@ def user():
             
                 meta_data = {'appointment':doc_pat_records,'pharmacy':pharma_pat_records,'laboratory':lab_pat_records}
 
+                session['time_first_entry'] = datetime.now()
+
                 with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
                     pickle.dump({'meta_data':meta_data,'data':records},f)
                 
             return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
 
+
         # Dashboard 2 -> Doctor
         if session['title'] == 'Doctor':
             print('Doctor')
             pass
+
 
         # Dashboard 3 -> Organization
         if session['title'] == 'Organization':
@@ -530,9 +601,12 @@ def user():
     return redirect('/login')
 
 
+@t.include
 @app.route('/record_detail<int:sno>')
 def record_detail(sno):
     if 'userid' in session:
+        g.track_var['userid'] = session["userid"]
+
         userid = session['userid']
         with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
             data = pickle.load(f)
@@ -605,16 +679,27 @@ def record_detail(sno):
         return redirect('/login')
 
 
+@t.include
 @app.route('/signout')
 def signout():
     '''
         Clears the session data and ends the session for the user.
     '''
     if "userid" in session:
+        g.track_var['userid'] = session["userid"]
         userid = session['userid']
         session.pop("userid", None)
         session.pop("title", None)
         session.pop("time_first_entry", None)
+        
+        with open(os.path.join('temp','activeusers.pkl'),'rb') as f:
+            activeusers = pickle.load(f)
+            
+        user = activeusers['users']
+        user.remove(userid)
+        activeusers['users'] = user
+        with open(os.path.join('temp','activeusers.pkl'),'wb') as f:
+            pickle.dump(activeusers,f)
 
         if os.path.exists(os.path.join('temp',f'{userid}_temp.pkl')):
             os.remove(os.path.join('temp',f'{userid}_temp.pkl'))
@@ -622,6 +707,7 @@ def signout():
     return redirect('/')
 
 
+@t.include
 @app.route('/account', methods=['GET','POST'])
 def account():
     '''
@@ -678,6 +764,7 @@ def account():
         return page_not_found(Exception)
 
 
+@t.include
 @app.route('/reset', methods=['GET','POST'])
 def reset():
     '''
@@ -701,6 +788,7 @@ def reset():
         return 'Hello World'
 
 
+@t.include
 @app.route('/otp/<username>',methods=['GET','POST'])
 def otp(username):
     '''
