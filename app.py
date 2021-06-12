@@ -31,6 +31,7 @@ fs = gridfs.GridFS(mongo.db)
 
 app.config['TRACK_USAGE_USE_FREEGEOIP'] = True
 app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://extreme-ip-lookup.com/json/{ip}'
+# app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://ip-api.com/json/{ip}'
 app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'include'
 
 mstorage = MongoStorage('test','tracker')
@@ -46,12 +47,9 @@ def page_not_found(e):
 @t.include
 @app.route('/',methods=['GET'])
 def index():
-    
-    url = "http://extreme-ip-lookup.com/json/{}".format(request.remote_addr)
-    r = requests.get(url)
-    j = json.loads(r.text)
-    print(j)
-    return render_template('home.html')
+
+
+    return render_template('home.html')    
 
 
 @t.include
