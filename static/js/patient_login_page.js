@@ -110,3 +110,17 @@ function password_verification(){
     }
 
 }
+
+
+function trigger_type(){
+    document.getElementById("org-type").classList.remove("none");
+    document.getElementById("org-type").classList.add("create-div");
+};
+
+
+function untrigger_type(){
+    if(document.querySelector('#org-type').matches('.create-div')){
+        document.getElementById("org-type").classList.remove("create-div");
+        document.getElementById("org-type").classList.add("none");
+    }
+};

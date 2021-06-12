@@ -30,7 +30,8 @@ mongo = PyMongo(app)
 fs = gridfs.GridFS(mongo.db)
 
 app.config['TRACK_USAGE_USE_FREEGEOIP'] = True
-app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://extreme-ip-lookup.com/json/{ip}'
+app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://extreme-ip-lookup.com/json/'
+
 # app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://ip-api.com/json/{ip}'
 app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'include'
 
@@ -47,8 +48,6 @@ def page_not_found(e):
 @t.include
 @app.route('/',methods=['GET'])
 def index():
-
-
     return render_template('home.html')    
 
 
@@ -217,6 +216,7 @@ def pharmanewrecord():
                 strips = int(quantity[1])
                 tablets = int(quantity[2])
                 tottablets = boxes*strips*tablets
+                exp_date = request.form['expdate']
                 if labid == session['userid']:
                     
                     print(labtype)
@@ -239,6 +239,7 @@ def pharmanewrecord():
                         'quantity_strips':strips,
                         'quantity_tablets':tablets,
                         'total_tablets':tottablets,
+                        'expiry_date': exp_date,
                         'time_created':time_now
                     })
                     print("Data saved into database")
@@ -333,6 +334,7 @@ def pathorecord():
                         time_now = datetime.now()
                         id_patho = mongo.db.patho_database.insert_one({
                             'LaboratoryID':labid,
+                            'Laboratory Type': 'Pathology',
                             'department_name':department_name,
                             'patientID':patient_id,
                             'date':date,
@@ -371,7 +373,7 @@ def login():
         userid = mongo.db.test_collection.find_one_or_404({"username":username,"password":password})
         # print(userid)
 
-        g.username = username
+        # g.username = username
         # adding the user to active user's list
         # popping the data of user if found in active users but not in session variable
         if os.path.exists(os.path.join('temp','activeusers.pkl')):
@@ -446,6 +448,7 @@ def user():
         image = base64_data.decode('utf-8')
 
         session['title'] = title
+        print(session['title'])
         mon_code = codes()
 
         # Dashboard 1 -> Patient
@@ -525,51 +528,52 @@ def user():
                 print('Patient')
                 pat_records = mongo.db.pat_database.find({'patientID':userid})
                 print(pat_records)
-                for x in pat_records:
-                    if x['type_record'].startswith('Doc'):
-                        data = mongo.db.doc_database.find_one({'patientID':userid,'_id':x['id']})
-                        if data:
-                            doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
-                            data['doc_name'] = doc_name['name']
-                            data['category'] = 'Appointment'
-                            data['heading'] = data['disease']
-                            data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
-                            data['day'] = data['date'].split('-')[-1]
-                            doc_pat_records+=1
-                            records.append(data)
-                    elif x['type_record'].startswith('Radio'):
-                        data = mongo.db.org_database.find_one({'patientID':userid,'_id':x['id']})
-                        if data:
-                            doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
-                            data['doc_name'] = doc_name['name']
-                            data['category'] = 'Radiology/Ultrasound'
-                            data['heading'] = data['scantype']
-                            data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
-                            data['day'] = data['date'].split('-')[-1]
-                            records.append(data)
-                            lab_pat_records+=1
-                    elif x['type_record'].startswith('Pharm'):
-                        data = mongo.db.pharma_stock_database.find_one({'patientID':userid,'_id':x['id']})
-                        if data:
-                            doc_name = mongo.db.test_collection.find_one({'username':data['PharmacyID']})
-                            data['doc_name'] = doc_name['name']
-                            data['category'] = 'Pharmacy'
-                            data['heading'] = 'Medications'
-                            data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
-                            data['day'] = data['date'].split('-')[-1]
-                            records.append(data)
-                            pharma_pat_records+=1
-                    elif x['type_record'].startswith('Patho'):
-                        data = mongo.db.patho_database.find_one({'patientID':userid,'_id':x['id']})
-                        if data:
-                            doc_name = mongo.db.test_collection.find_one({'username':data['LaboratoryID']})
-                            data['doc_name'] = doc_name['name']
-                            data['category'] = 'Pathology'
-                            data['heading'] = data['department_name']
-                            data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
-                            data['day'] = data['date'].split('-')[-1]
-                            records.append(data)
-                            lab_pat_records+=1
+                if pat_records:
+                    for x in pat_records:
+                        if x['type_record'].startswith('Doc'):
+                            data = mongo.db.doc_database.find_one({'patientID':userid,'_id':x['id']})
+                            if data:
+                                doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                                data['doc_name'] = doc_name['name']
+                                data['category'] = 'Appointment'
+                                data['heading'] = data['disease']
+                                data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                                data['day'] = data['date'].split('-')[-1]
+                                doc_pat_records+=1
+                                records.append(data)
+                        elif x['type_record'].startswith('Radio'):
+                            data = mongo.db.org_database.find_one({'patientID':userid,'_id':x['id']})
+                            if data:
+                                doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                                data['doc_name'] = doc_name['name']
+                                data['category'] = 'Radiology/Ultrasound'
+                                data['heading'] = data['scantype']
+                                data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                                data['day'] = data['date'].split('-')[-1]
+                                records.append(data)
+                                lab_pat_records+=1
+                        elif x['type_record'].startswith('Pharm'):
+                            data = mongo.db.pharma_stock_database.find_one({'patientID':userid,'_id':x['id']})
+                            if data:
+                                doc_name = mongo.db.test_collection.find_one({'username':data['PharmacyID']})
+                                data['doc_name'] = doc_name['name']
+                                data['category'] = 'Pharmacy'
+                                data['heading'] = 'Medications'
+                                data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                                data['day'] = data['date'].split('-')[-1]
+                                records.append(data)
+                                pharma_pat_records+=1
+                        elif x['type_record'].startswith('Patho'):
+                            data = mongo.db.patho_database.find_one({'patientID':userid,'_id':x['id']})
+                            if data:
+                                doc_name = mongo.db.test_collection.find_one({'username':data['LaboratoryID']})
+                                data['doc_name'] = doc_name['name']
+                                data['category'] = 'Pathology'
+                                data['heading'] = data['department_name']
+                                data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                                data['day'] = data['date'].split('-')[-1]
+                                records.append(data)
+                                lab_pat_records+=1
             
                 meta_data = {'appointment':doc_pat_records,'pharmacy':pharma_pat_records,'laboratory':lab_pat_records}
 
@@ -588,10 +592,84 @@ def user():
 
 
         # Dashboard 3 -> Organization
-        if session['title'] == 'Organization':
-            print('Organization')
-            pass
-        
+        if session['title'] == 'Organisation':
+            print('Organisation')
+            type_org = mongo.db.test_collection.find_one({'username':userid,'title':'Organisation'})
+            type_org = type_org['organisation_type']
+            if type_org.startswith('Pha'):
+                if os.path.exists(os.path.join('temp',f'{userid}_temp.pkl')):
+                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
+                        data = pickle.load(f)
+                    meta_data = data['meta_data']
+                    records = data['data']                  
+
+                    org_pharma_records = mongo.db.pharma_stock_database.find({'PharmacyID':userid,"time_created":{"$gt":session['time_first_entry']}})
+
+                    if org_pharma_records:
+                        for x in org_pharma_records:
+                            data = dict()
+                            data['type'] = x['PharmaStockType']
+                            if x['PharmaStockType'] == "Pharmacy-New Stock":
+                                data['comp'] = x['company_name']
+                                data['meds'] = x['medicine_name']
+                                data['quan'] = x['total_tablets']
+                                data['date'] = x['expiry_date']
+                                meta_data["stockpharmacy"]+=1
+                                records.append(data)
+                            elif x['PharmaStockType'] == "Pharmacy-Dispatched":
+                                for i in x['medicines']:
+                                    med = i.split('-')
+                                    data['comp'] = med[0]
+                                    data['meds'] = med[1]
+                                    data['quan'] = med[2]
+                                    data['date'] = '-'
+
+                                meta_data["dispatchedpharmacy"]+=1
+                                records.append(data)
+                      
+                    session['time_first_entry'] = datetime.now()
+                    print(records)
+                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                        pickle.dump({'meta_data':meta_data,'data':records},f)
+                    
+                else:
+                    if not os.path.exists('temp'):
+                        os.mkdir('temp')
+                    disp_records = 0
+                    stock_records = 0
+                    records = list()
+                    org_pharma_records = mongo.db.pharma_stock_database.find({'PharmacyID':userid})
+                    if org_pharma_records:
+                        for x in org_pharma_records:
+                            data = dict()
+                            data['type'] = x['PharmaStockType']
+                            if x['PharmaStockType'] == "Pharmacy-New Stock":
+                                data['comp'] = x['company_name']
+                                data['meds'] = x['medicine_name']
+                                data['quan'] = x['total_tablets']
+                                data['date'] = x['expiry_date']
+                                stock_records+=1
+                                records.append(data)
+                            elif x['PharmaStockType'] == "Pharmacy-Dispatched":
+                                for i in x['medicines']:
+                                    med = i.split('-')
+                                    data['comp'] = med[0]
+                                    data['meds'] = med[1]
+                                    data['quan'] = med[2]
+                                    data['date'] = '-'
+
+                                disp_records+=1
+                                records.append(data)                        
+                        
+                    print(records)
+                    meta_data = {'dispatchedpharmacy':disp_records,'stockpharmacy':stock_records}
+
+                    session['time_first_entry'] = datetime.now()
+
+                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                        pickle.dump({'meta_data':meta_data,'data':records},f)
+                    
+            return render_template('pharma_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'type':"Pharmacy",'meta_data':meta_data,'records':records})
         
 
         return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':{'appointment':0,'pharmacy':0,'laboratory':0}})
@@ -717,6 +795,7 @@ def account():
         dob = request.form['dob']
         gender = request.form['gender']
         title = request.form['identity']
+        
         password = request.form['password-create']
         address = request.form['address']
         state = request.form['state']
@@ -725,15 +804,42 @@ def account():
         mobile = request.form['mobileno']
         email = request.form['emailid']
         adhaar = request.form['adhaar']
-        time_created = datetime.now()        
-        username = title[:3].upper() + code.statecode(state) + dob.split('-')[0] + str(code.usernumber(title,state))
+        time_created = datetime.now() 
+        if title.startswith('Org'):
+            orgtype = request.form['orgtype']
+            username = title[:3].upper() + orgtype[:3].upper() + code.statecode(state) + dob.split('-')[0] + str(code.usernumber(title,state))
+
+        else:
+            username = title[:3].upper() + code.statecode(state) + dob.split('-')[0] + str(code.usernumber(title,state))
+
         filename = username + '.png'
         print(filename)
         try:
             if not mongo.db.test_collection.find_one({'adhaar':adhaar}):
                 id = mongo.save_file(filename,request.files['photo'])
                 print(' Profile Image Saved Successfully')
-                mongo.db.test_collection.insert_one({"id":id,
+                if title.startswith('Org'):                   
+                    orgtype = request.form['orgtype']
+                    mongo.db.test_collection.insert_one({"id":id,
+                                                    "name":name,
+                                                    "dob":dob,
+                                                    "gender":gender,
+                                                    "title":title,
+                                                    "organisation_type":orgtype,
+                                                    "username":username,
+                                                    "password":password,
+                                                    "address":address,
+                                                    "state":state,
+                                                    "city":city,
+                                                    "pin":pin,
+                                                    "mobile":mobile,
+                                                    "email":email,
+                                                    "adhaar":adhaar,
+                                                    "profile_photo":filename,
+                                                    "time_created":time_created})
+                else:
+                    
+                    mongo.db.test_collection.insert_one({"id":id,
                                                     "name":name,
                                                     "dob":dob,
                                                     "gender":gender,
@@ -812,4 +918,4 @@ def otp(username):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

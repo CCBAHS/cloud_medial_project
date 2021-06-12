@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;700&family=Ubuntu:ital@1&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto&display=swap" rel="stylesheet">
+
+    <link rel="shortcut icon" href="/static/images/icons/icon.png" type="image/png">
 </head>
 <body>
     <div class="container">
@@ -75,14 +77,23 @@
                     <label for="female" class = "create-gender">Female</label>
                     <input type="radio" class = 'radio-input' id="others" name="gender" value="Others" required>
                     <label for="others" class = "create-gender">Others</label>
-                    <label for="identity" class="create-label"> Who are you ? </label>
-                    <input type="radio" name="identity" id="patient" class="radio-input mx--3" value="Patient" required>
+                    <label for="identity" class="create-label"> Who are you? </label>
+                    <input type="radio" name="identity" id="patient" class="radio-input mx--3" value="Patient" onClick="untrigger_type()" required>
                     <label for="patient" class = "create-iden">Patient</label>
-                    <input type="radio" name="identity" id="doctor" class="radio-input" value="Doctor" required>
+                    <input type="radio" name="identity" id="doctor" class="radio-input" value="Doctor" onClick="untrigger_type()" required>
                     <label for="doctor" class = "create-iden">Doctor</label>
-                    <input type="radio" name="identity" id="organisation" class="radio-input" value="Organisation" required>
-                    <label for="organisation" class = "create-iden">Organisation</label>
-               
+                    <input type="radio" name="identity" id="organisation" class="radio-input" value="Organisation" onClick="trigger_type()" required>
+                    <label for="organisation" class = "create-iden">Organisation</label>                   
+                                   
+                </div>
+                <div class="none" id="org-type" >
+                    <label for="orgtype" class="create-label"> Type of Organisation? </label>
+                    <input type="radio" name="orgtype" id="pathology" class="radio-input mx--3" value="Pathology" required>
+                    <label for="patient" class = "create-iden">Pathology</label>
+                    <input type="radio" name="orgtype" id="pharmacy" class="radio-input" value="Pharmacy" required>
+                    <label for="doctor" class = "create-iden">Pharmacy</label>
+                    <input type="radio" name="orgtype" id="radiology" class="radio-input" value="Radiology/UltraSound" required>
+                    <label for="organisation" class = "create-iden">Radiology/UltraSound</label>
                 </div>
                 <div class='create-div'>
                     <label for="password-create" class="create-label"> Password : </label>

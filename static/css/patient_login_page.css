@@ -12,6 +12,10 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+.none{
+  display: none;
+}
+
 /* main container design */
 .container {
   height: 100vh;
