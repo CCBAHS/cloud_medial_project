@@ -89,14 +89,7 @@ def docrecord():
                 if doctor_id == session['userid']:
                     p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
                     if p_id:
-                        print(doctor_id)
-                        print(patient_id)
-                        print(date)
-                        print(diagnostic)
-                        print(disease)
-                        print(tests)
-                        print(medicines)
-                        print(advice)
+                        
                         time_now = datetime.now()
                         id = mongo.db.doc_database.insert_one({
                             'doctorID':doctor_id,
@@ -109,8 +102,7 @@ def docrecord():
                             'tests':tests,
                             'time_created':time_now
                         })
-                        print("Doctors")
-                        print(id.inserted_id)
+                        
                         mongo.db.pat_database.insert_one({
                             'id':id.inserted_id,
                             'patientID':patient_id,
@@ -154,15 +146,7 @@ def radrecord():
                     d_id = mongo.db.test_collection.find_one({'username': doctor_id,'title':'Doctor'})
                     if p_id and d_id:
                         id = mongo.save_file(filename,request.files['scanfile'])
-                        print(' Profile Image Saved Successfully')
-                        print(doctor_id)
-                        print(patient_id)
-                        print(filename)
-                        print(date)
-                        print(scantype)
-                        print(bodypart)
-                        print(observation)
-                        print(impressions)
+                        
                         time_now = datetime.now()
                         id_org = mongo.db.org_database.insert_one({
                             'id':id,
@@ -178,8 +162,7 @@ def radrecord():
                             'img_filename':filename,
                             'time_created':time_now
                         })
-                        print("Doctors")
-                        print(id_org.inserted_id)
+                        
                         mongo.db.pat_database.insert_one({
                             'id':id_org.inserted_id,
                             'patientID':patient_id,
@@ -219,15 +202,7 @@ def pharmanewrecord():
                 exp_date = request.form['expdate']
                 if labid == session['userid']:
                     
-                    print(labtype)
-                    print(labid)
-                    print(date)
-                    print(company_name)
-                    print(medicine_name)
-                    print(boxes)
-                    print(strips)
-                    print(tablets)
-                    print(tottablets)
+                    
                     time_now = datetime.now()
                     mongo.db.pharma_stock_database.insert_one({
                         'PharmacyID':labid,
@@ -242,7 +217,7 @@ def pharmanewrecord():
                         'expiry_date': exp_date,
                         'time_created':time_now
                     })
-                    print("Data saved into database")
+                    
                     return redirect('/user')
                     
                 else:
@@ -272,12 +247,7 @@ def pharmadisrecord():
                     p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
                     d_id = mongo.db.test_collection.find_one({'username': doctor_id,'title':'Doctor'})
                     if p_id and d_id:
-                        print(labtype)
-                        print(labid)
-                        print(doctor_id)
-                        print(patient_id)
-                        print(date)
-                        print(medicines)
+                        
                         time_now = datetime.now()
                         id_pharma = mongo.db.pharma_stock_database.insert_one({
                             'PharmacyID':labid,
@@ -288,7 +258,7 @@ def pharmadisrecord():
                             'medicines':medicines,
                             'time_created':time_now
                         })
-                        print(id_pharma.inserted_id)
+                        
                         mongo.db.pat_database.insert_one({
                             'id':id_pharma.inserted_id,
                             'patientID':patient_id,
@@ -325,12 +295,7 @@ def pathorecord():
                 if labid == session['userid']:
                     p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
                     if p_id:
-                        print(labtype)
-                        print(labid)
-                        print(department_name)
-                        print(patient_id)
-                        print(date)
-                        print(investigation)
+                        
                         time_now = datetime.now()
                         id_patho = mongo.db.patho_database.insert_one({
                             'LaboratoryID':labid,
@@ -341,7 +306,7 @@ def pathorecord():
                             'investigations':investigation,
                             'time_created':time_now
                         })
-                        print(id_patho.inserted_id)
+                        
                         mongo.db.pat_database.insert_one({
                             'id':id_patho.inserted_id,
                             'patientID':patient_id,
@@ -381,18 +346,18 @@ def login():
                 activeusers = pickle.load(f)
             
             user = activeusers['users']
-            print(user)
+            
             if username in user:
                 # not logged out but closed the browser
-                print(True)
+                
                 if os.path.exists(os.path.join('temp',f'{username}_temp.pkl')):
-                    print('yes')
+                    
                     os.remove(os.path.join('temp',f'{username}_temp.pkl'))
                     user.remove(username)
-                    print(user)
+                    
 
             user.append(username)
-            print(user)
+            
             activeusers['users'] = user
             with open(os.path.join('temp','activeusers.pkl'),'wb') as f:
                 pickle.dump(activeusers,f)
@@ -407,7 +372,7 @@ def login():
             activeusers['users'] = users
             with open(os.path.join('temp','activeusers.pkl'),'wb') as f:
                 pickle.dump(activeusers,f)
-            print(users)  
+              
 
         session['userid'] = userid['username']
         session["time_first_entry"] = datetime.now()
@@ -448,7 +413,7 @@ def user():
         image = base64_data.decode('utf-8')
 
         session['title'] = title
-        print(session['title'])
+        
         mon_code = codes()
 
         # Dashboard 1 -> Patient
@@ -525,9 +490,9 @@ def user():
                 lab_pat_records = 0
                 pharma_pat_records = 0
                 records = list()
-                print('Patient')
+                
                 pat_records = mongo.db.pat_database.find({'patientID':userid})
-                print(pat_records)
+                
                 if pat_records:
                     for x in pat_records:
                         if x['type_record'].startswith('Doc'):
@@ -593,7 +558,6 @@ def user():
 
         # Dashboard 3 -> Organization
         if session['title'] == 'Organisation':
-            print('Organisation')
             type_org = mongo.db.test_collection.find_one({'username':userid,'title':'Organisation'})
             type_org = type_org['organisation_type']
             if type_org.startswith('Pha'):
@@ -614,6 +578,7 @@ def user():
                                 data['meds'] = x['medicine_name']
                                 data['quan'] = x['total_tablets']
                                 data['date'] = x['expiry_date']
+                                data['dispdate'] = '-'
                                 meta_data["stockpharmacy"]+=1
                                 records.append(data)
                             elif x['PharmaStockType'] == "Pharmacy-Dispatched":
@@ -623,12 +588,13 @@ def user():
                                     data['meds'] = med[1]
                                     data['quan'] = med[2]
                                     data['date'] = '-'
+                                    data['dispdate'] = x['date']
 
                                 meta_data["dispatchedpharmacy"]+=1
                                 records.append(data)
                       
                     session['time_first_entry'] = datetime.now()
-                    print(records)
+                    
                     with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
                         pickle.dump({'meta_data':meta_data,'data':records},f)
                     
@@ -648,6 +614,7 @@ def user():
                                 data['meds'] = x['medicine_name']
                                 data['quan'] = x['total_tablets']
                                 data['date'] = x['expiry_date']
+                                data['dispdate'] = '-'
                                 stock_records+=1
                                 records.append(data)
                             elif x['PharmaStockType'] == "Pharmacy-Dispatched":
@@ -657,11 +624,12 @@ def user():
                                     data['meds'] = med[1]
                                     data['quan'] = med[2]
                                     data['date'] = '-'
+                                    data['dispdate'] = x['date']
 
                                 disp_records+=1
                                 records.append(data)                        
                         
-                    print(records)
+                    
                     meta_data = {'dispatchedpharmacy':disp_records,'stockpharmacy':stock_records}
 
                     session['time_first_entry'] = datetime.now()
@@ -669,13 +637,144 @@ def user():
                     with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
                         pickle.dump({'meta_data':meta_data,'data':records},f)
                     
-            return render_template('pharma_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'type':"Pharmacy",'meta_data':meta_data,'records':records})
-        
+                return render_template('pharma_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'type':"Pharmacy",'meta_data':meta_data,'records':records})
+
+            elif type_org.startswith('Rad'):
+                if os.path.exists(os.path.join('temp',f'{userid}_temp.pkl')):
+                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
+                        data = pickle.load(f)
+                    meta_data = data['meta_data']
+                    records = data['data']
+                    
+                    org_records = mongo.db.org_database.find({'LaboratoryID':userid,"time_created":{"$gt":session['time_first_entry']}})
+
+                    if org_records:
+                        for x in org_records:
+                            data = x
+                            
+                            doc_name = mongo.db.test_collection.find_one({'username':x['doctorID']})
+                            if doc_name:
+                                data['doc_name'] = doc_name['name']
+                                if x['scantype'] == "MRI":
+                                    data['category'] = 'MRI'
+                                    data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    meta_data['mri']+=1
+                                    records.append(data)
+                                elif x['scantype'] == "CT-Scan":
+                                    data['category'] = 'CT-Scan'
+                                    data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    records.append(data)
+                                    meta_data['ctscan']+=1
+                                elif x['scantype'] == "X-Ray":
+                                    data['category'] = 'X-Ray'
+                                    data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    records.append(data)
+                                    meta_data['xray']+=1
+                                elif x['scantype'] == "Ultrasound":
+                                    data['category'] = 'UltraSound'
+                                    data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    records.append(data)
+                                    meta_data['ultra']+=1
+                    
+                    session['time_first_entry'] = datetime.now()
+
+                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                        pickle.dump({'meta_data':meta_data,'data':records},f)
+                    
+                else:
+                    if not os.path.exists('temp'):
+                        os.mkdir('temp')
+                    mri_records = 0
+                    ctscan_records = 0
+                    xray_records = 0
+                    ultra_records = 0
+                    records = list()
+                    org_records = mongo.db.org_database.find({'LaboratoryID':userid})
+                    if org_records:
+                        for x in org_records:
+                            data = x
+                            
+                            doc_name = mongo.db.test_collection.find_one({'username':x['doctorID']})
+                            if doc_name:
+                                x['doc_name'] = doc_name['name']
+                                if x['scantype'] == "MRI":
+                                    data['category'] = 'MRI'
+                                    data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    mri_records+=1
+                                    records.append(data)
+                                elif x['scantype'] == "CT-Scan":
+                                    data['category'] = 'CT-Scan'
+                                    data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    records.append(data)
+                                    ctscan_records+=1
+                                elif x['scantype'] == "X-Ray":
+                                    data['category'] = 'X-Ray'
+                                    data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    records.append(data)
+                                    xray_records+=1
+                                elif x['scantype'] == "Ultrasound":
+                                    data['category'] = 'UltraSound'
+                                    data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    records.append(data)
+                                    ultra_records+=1
+                
+                    meta_data = {'xray':xray_records,'ctscan':ctscan_records,'mri':mri_records,'ultra':ultra_records}
+
+                    session['time_first_entry'] = datetime.now()
+
+                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                        pickle.dump({'meta_data':meta_data,'data':records},f)
+                    
+                return render_template('rad_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
 
         return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':{'appointment':0,'pharmacy':0,'laboratory':0}})
 
     return redirect('/login')
 
+
+@t.include
+@app.route('/rad_record_detail<int:sno>')
+def rad_record_detail(sno):
+    if 'userid' in session:
+        g.track_var['userid'] = session["userid"]
+
+        userid = session['userid']
+        with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
+            data = pickle.load(f)
+
+                
+        data = data['data'][sno-1]
+
+        img = fs.get(data['id'])
+        base64_data = codecs.encode(img.read(), 'base64')
+        image = base64_data.decode('utf-8')
+
+
+        params ={'date':data['date'],
+        'doc_name':data['doc_name'],
+                'scantype':data['scantype'],
+                'bodypart':data['bodypart'],
+                'observation':data['observation'],
+                'impressions':data['impressions'],
+                'image':image}
+
+        return render_template('rad_record.html',params=params)
 
 @t.include
 @app.route('/record_detail<int:sno>')
@@ -686,10 +785,9 @@ def record_detail(sno):
         userid = session['userid']
         with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
             data = pickle.load(f)
-        print(sno)
-        print(data['data'])
+        
         data = data['data'][sno-1]
-        print(data)
+        
 
         if data['category'].startswith('App'):
             params = {'doc_name':data['doc_name'],
@@ -721,13 +819,13 @@ def record_detail(sno):
             for i in data['investigations']:
                 rec = i.split('-')
                 recd = dict()
-                print(rec)
+                
                 recd['inves'] = rec[0]
-                print(recd)
+                
                 recd['value'] = rec[1]
-                print(recd)
+                
                 records.append(recd)
-            print(records)
+            
             params ={'dep_name':data['department_name'],
                     'records':records,
                     'date':data['date']}
@@ -738,15 +836,15 @@ def record_detail(sno):
             for i in data['medicines']:
                 med = i.split('-')
                 meds = dict()
-                print(med)
+                
                 meds['comp'] = med[0]
-                print(meds)
+                
                 meds['meds'] = med[1]
-                print(meds)
+               
                 meds['quan'] = med[2]
-                print(meds)
+                
                 medicines.append(meds)
-            print(medicines)
+            
             params ={'PharmaStockType':data['PharmaStockType'],
                     'medicines':medicines,
                     'date':data['date']}
@@ -813,11 +911,11 @@ def account():
             username = title[:3].upper() + code.statecode(state) + dob.split('-')[0] + str(code.usernumber(title,state))
 
         filename = username + '.png'
-        print(filename)
+        
         try:
             if not mongo.db.test_collection.find_one({'adhaar':adhaar}):
                 id = mongo.save_file(filename,request.files['photo'])
-                print(' Profile Image Saved Successfully')
+                
                 if title.startswith('Org'):                   
                     orgtype = request.form['orgtype']
                     mongo.db.test_collection.insert_one({"id":id,
@@ -855,7 +953,7 @@ def account():
                                                     "adhaar":adhaar,
                                                     "profile_photo":filename,
                                                     "time_created":time_created})
-                print(' Data Object Inserted Successfully ')
+                
                 mailbot = mailingbot()
                 mailbot.send_message(email,{'name':name,'username':username})
                 params ={'title':'Account Creation','verify':True}
@@ -863,7 +961,7 @@ def account():
             else:
                 page_not_found(Exception)
         except Exception:
-            print(Exception)
+            page_not_found(Exception)
     else:
         return page_not_found(Exception)
 
@@ -906,9 +1004,7 @@ def otp(username):
         email_user = mongo.db.test_collection.find_one({'username': username})['email']
         name_user = mongo.db.test_collection.find_one({'username': username})['name']
         valid = mailbot.validate_otp(otp_db,otp)
-        print(valid)
-        print(otp)
-        print(otp_db)
+        
         if valid:
             mailbot.send_password(email_user,{'name':name_user,'username':username,'password':password_user})
             mongo.db.otp.delete_one({'username': username})

@@ -25,7 +25,7 @@ function forget_password(){
 function reset_password(){
     // sending reset password link to the email id
     preventDefault();
-    console.log('reset password');
+    
 }
 
 
@@ -36,7 +36,7 @@ checkbox = document.getElementById('agree');
 checkbox.addEventListener('change', e => {
     
     if(!e.target.checked){
-        console.log('Hello');
+        
         document.getElementById('submit-account-create-btn').style.display = 'none';
     }
     else{
@@ -64,14 +64,14 @@ function file_verify(){
         // console.log('Hurray');
         // format check
         let type = document.getElementById('photo').value;
-        console.log(type);
+        
         let jpg = type.match('.jpg');
         let png = type.match('.png');
         if(!jpg && !png){
             im_file.value = '';
             alert(' Invalid file type ');
         }
-        console.log(im_file.files);
+        
     }
 
 }
@@ -96,7 +96,7 @@ function validate_date(){
     if(curr_date < dob_date){
         dob = '';
         alert(' Please select a valid date of birth ');
-        console.log(dob);
+        
     }
 }
 

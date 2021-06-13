@@ -23,7 +23,7 @@ class codes:
                 codes = json.loads(json_file.read())
         title = title.lower()
         state = state.lower()
-        print(codes)
+        
         if title.startswith('pat'):
             code = codes["PATIENTCODES"][state] + 1
             codes["PATIENTCODES"][state] = code
@@ -122,7 +122,7 @@ class mailingbot:
         msg['to'] = reciever
         msg['subject'] = f' {message["name"]} Form Submission '
         
-        print(msg)
+        
         try:
             smtp = smtplib.SMTP('smtp.gmail.com', 587)
             smtp.starttls()
@@ -130,7 +130,7 @@ class mailingbot:
             smtp.sendmail(self.email, reciever, msg.as_string())
             smtp.quit()
 
-            print(" Mail sent successfully! ")
+            
         except Exception:
             raise Exception(" Your mail was not sent successfully ")
 
@@ -175,7 +175,7 @@ class mailingbot:
         msg['to'] = reciever
         msg['subject'] = f' {message["name"]} Password '
         
-        print(msg)
+        
         try:
             smtp = smtplib.SMTP('smtp.gmail.com', 587)
             smtp.starttls()
@@ -183,7 +183,7 @@ class mailingbot:
             smtp.sendmail(self.email, reciever, msg.as_string())
             smtp.quit()
 
-            print(" Mail sent successfully! ")
+            
         except Exception:
             raise Exception(" Your mail was not sent successfully ")
     
@@ -231,7 +231,7 @@ class mailingbot:
         msg['to'] = reciever
         msg['subject'] = f' {message["name"]} Reset Password OTP '
         
-        print(msg)
+        
         try:
             smtp = smtplib.SMTP('smtp.gmail.com', 587)
             smtp.starttls()
@@ -239,7 +239,7 @@ class mailingbot:
             smtp.sendmail(self.email, reciever, msg.as_string())
             smtp.quit()
 
-            print(" Mail sent successfully! ")
+            
         except Exception:
             raise Exception(" Your mail was not sent successfully ")
 

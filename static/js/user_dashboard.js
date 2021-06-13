@@ -236,3 +236,267 @@ function change_detail1() {
  
 }
 
+
+function display_stock(){
+
+  console.log('Stock');
+  let elems = document.getElementsByClassName('Pharmacy-New Stock');
+  for (var i=0;i<elems.length;i+=1){
+    elems[i].classList.add('table-row');
+    elems[i].classList.remove('hidden');
+  };
+  let elems1 = document.getElementsByClassName('Pharmacy-Dispatched');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.add('hidden');
+    elems1[i].classList.remove('table-row');
+  };
+};
+
+function display_disp(){
+  
+  let elems = document.getElementsByClassName('Pharmacy-New Stock');
+  for (var i=0;i<elems.length;i+=1){
+    elems[i].classList.add('hidden');
+    elems[i].classList.remove('table-row');
+  };
+  let elems1 = document.getElementsByClassName('Pharmacy-Dispatched');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.add('table-row');
+    elems1[i].classList.remove('hidden');
+  };
+};
+
+function display_all_stock(){
+  
+  let elems = document.getElementsByClassName('Pharmacy-New Stock');
+  for (var i=0;i<elems.length;i+=1){
+    elems[i].classList.remove('hidden');
+    elems[i].classList.add('table-row');
+  };
+  let elems1 = document.getElementsByClassName('Pharmacy-Dispatched');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.add('table-row');
+    elems1[i].classList.remove('hidden');
+  };
+};
+
+function display_appointment(){
+
+ 
+  let elems = document.getElementsByClassName('Appointment');
+  for (var i=0;i<elems.length;i+=1){
+    // elems[i].classList.add('table-row');
+    elems[i].classList.remove('hidden');
+  };
+  let elems1 = document.getElementsByClassName('Radiology/Ultrasound');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems2 = document.getElementsByClassName('Pharmacy');
+  for (var i=0;i<elems2.length;i+=1){
+    elems2[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems3 = document.getElementsByClassName('Pathology');
+  for (var i=0;i<elems3.length;i+=1){
+    elems3[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+};
+
+function display_pharmacy(){
+
+  
+  let elems = document.getElementsByClassName('Appointment');
+  for (var i=0;i<elems.length;i+=1){
+    // elems[i].classList.add('table-row');
+    elems[i].classList.add('hidden');
+  };
+  let elems1 = document.getElementsByClassName('Radiology/Ultrasound');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems2 = document.getElementsByClassName('Pharmacy');
+  for (var i=0;i<elems2.length;i+=1){
+    elems2[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems3 = document.getElementsByClassName('Pathology');
+  for (var i=0;i<elems3.length;i+=1){
+    elems3[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+};
+
+function display_laboratry(){
+
+  
+  let elems = document.getElementsByClassName('Appointment');
+  for (var i=0;i<elems.length;i+=1){
+    // elems[i].classList.add('table-row');
+    elems[i].classList.add('hidden');
+  };
+  let elems1 = document.getElementsByClassName('Radiology/Ultrasound');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems2 = document.getElementsByClassName('Pharmacy');
+  for (var i=0;i<elems2.length;i+=1){
+    elems2[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems3 = document.getElementsByClassName('Pathology');
+  for (var i=0;i<elems3.length;i+=1){
+    elems3[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+};
+
+function display_all(){
+
+  
+  let elems = document.getElementsByClassName('Appointment');
+  for (var i=0;i<elems.length;i+=1){
+    // elems[i].classList.add('table-row');
+    elems[i].classList.remove('hidden');
+  };
+  let elems1 = document.getElementsByClassName('Radiology/Ultrasound');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems2 = document.getElementsByClassName('Pharmacy');
+  for (var i=0;i<elems2.length;i+=1){
+    elems2[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems3 = document.getElementsByClassName('Pathology');
+  for (var i=0;i<elems3.length;i+=1){
+    elems3[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+};
+
+
+function display_mri(){
+
+  let elems = document.getElementsByClassName('MRI');
+  for (var i=0;i<elems.length;i+=1){
+    // elems[i].classList.add('table-row');
+    elems[i].classList.remove('hidden');
+  };
+  let elems1 = document.getElementsByClassName('CT-Scan');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems2 = document.getElementsByClassName('X-Ray');
+  for (var i=0;i<elems2.length;i+=1){
+    elems2[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems3 = document.getElementsByClassName('UltraSound');
+  for (var i=0;i<elems3.length;i+=1){
+    elems3[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+};
+function display_ctscan(){
+
+  let elems = document.getElementsByClassName('MRI');
+  for (var i=0;i<elems.length;i+=1){
+    // elems[i].classList.add('table-row');
+    elems[i].classList.add('hidden');
+  };
+  let elems1 = document.getElementsByClassName('CT-Scan');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems2 = document.getElementsByClassName('X-Ray');
+  for (var i=0;i<elems2.length;i+=1){
+    elems2[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems3 = document.getElementsByClassName('UltraSound');
+  for (var i=0;i<elems3.length;i+=1){
+    elems3[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+};
+
+function display_xray(){
+
+  let elems = document.getElementsByClassName('MRI');
+  for (var i=0;i<elems.length;i+=1){
+    // elems[i].classList.add('table-row');
+    elems[i].classList.add('hidden');
+  };
+  let elems1 = document.getElementsByClassName('CT-Scan');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems2 = document.getElementsByClassName('X-Ray');
+  for (var i=0;i<elems2.length;i+=1){
+    elems2[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems3 = document.getElementsByClassName('UltraSound');
+  for (var i=0;i<elems3.length;i+=1){
+    elems3[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+};
+
+function display_ultra(){
+
+  let elems = document.getElementsByClassName('MRI');
+  for (var i=0;i<elems.length;i+=1){
+    // elems[i].classList.add('table-row');
+    elems[i].classList.add('hidden');
+  };
+  let elems1 = document.getElementsByClassName('CT-Scan');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems2 = document.getElementsByClassName('X-Ray');
+  for (var i=0;i<elems2.length;i+=1){
+    elems2[i].classList.add('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems3 = document.getElementsByClassName('UltraSound');
+  for (var i=0;i<elems3.length;i+=1){
+    elems3[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+};
+
+
+function display_all_rad(){
+
+  let elems = document.getElementsByClassName('MRI');
+  for (var i=0;i<elems.length;i+=1){
+    // elems[i].classList.add('table-row');
+    elems[i].classList.remove('hidden');
+  };
+  let elems1 = document.getElementsByClassName('CT-Scan');
+  for (var i=0;i<elems1.length;i+=1){
+    elems1[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems2 = document.getElementsByClassName('X-Ray');
+  for (var i=0;i<elems2.length;i+=1){
+    elems2[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+  let elems3 = document.getElementsByClassName('UltraSound');
+  for (var i=0;i<elems3.length;i+=1){
+    elems3[i].classList.remove('hidden');
+    // elems1[i].classList.remove('table-row');
+  };
+};
