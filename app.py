@@ -189,7 +189,7 @@ def pharmanewrecord():
         g.track_var['userid'] = session["userid"]
         if session['userid'].startswith('ORG'):
             if request.method == 'POST':
-                labtype = "Pharmacy-New Stock"
+                labtype = "Pharmacy-New-Stock"
                 labid = request.form['labid']
                 date = request.form['date']
                 company_name = request.form['compname']
@@ -573,7 +573,7 @@ def user():
                         for x in org_pharma_records:
                             data = dict()
                             data['type'] = x['PharmaStockType']
-                            if x['PharmaStockType'] == "Pharmacy-New Stock":
+                            if x['PharmaStockType'] == "Pharmacy-New-Stock":
                                 data['comp'] = x['company_name']
                                 data['meds'] = x['medicine_name']
                                 data['quan'] = x['total_tablets']
@@ -609,7 +609,7 @@ def user():
                         for x in org_pharma_records:
                             data = dict()
                             data['type'] = x['PharmaStockType']
-                            if x['PharmaStockType'] == "Pharmacy-New Stock":
+                            if x['PharmaStockType'] == "Pharmacy-New-Stock":
                                 data['comp'] = x['company_name']
                                 data['meds'] = x['medicine_name']
                                 data['quan'] = x['total_tablets']

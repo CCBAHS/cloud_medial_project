@@ -20,6 +20,17 @@
        
     <link rel="stylesheet" href="/static/css/sidebar.css">
 
+<style>
+  .Pharmacy-New-Stock:hover{
+    background-color:rgba(241,139,130,0.9); 
+  }
+  .Pharmacy-Dispatched:hover{
+    background-color:rgba(172,217,212,0.9);
+  }
+</style>
+
+
+
     <title>{{params.name}}</title>
 
 
@@ -80,13 +91,13 @@
         <div class="container px-5 py-24 mx-auto">
           <div class="flex flex-wrap -m-4 text-center justify-center record-group">
             
-            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer mx-1">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900" >{{params.meta_data.stockpharmacy}}</h2>
-              <p class="leading-relaxed" onclick="display_stock()">Stock Pharmacy Records</p>
+            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:rgba(241,139,130,0.9)">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-white" >{{params.meta_data.stockpharmacy}}</h2>
+              <p class="leading-relaxed font-medium text-white" onclick="display_stock()">Stock Pharmacy Records</p>
             </div>
-            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer mx-1">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900" >{{params.meta_data.dispatchedpharmacy}}</h2>
-              <p class="leading-relaxed" onclick="display_disp()">Dispatched Pharmacy Records</p>
+            <div class="p-4 sm:w-1/4 w-1/2 shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color: rgba(172,217,212,0.9)">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-white">{{params.meta_data.dispatchedpharmacy}}</h2>
+              <p class="leading-relaxed font-medium text-white" onclick="display_disp()" style="color:rgba(180,128,183,1)">Dispatched Pharmacy Records</p>
             </div>
           </div>
         </div>
@@ -105,28 +116,43 @@
 
             <div class="container px-5 py-10 mx-auto">               
               <div class="lg:w-2/3 w-full mx-auto overflow-auto">
-                <table class="table-auto w-full text-left whitespace-no-wrap">
+                <table class="table-auto border-separate border border-black w-full text-left whitespace-no-wrap ">
                   <thead>
                     <tr class="flex-row w-full flex-wrap justify-items-center content-center items-center">
-                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold">Type of Record</th>
-                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold">Company Name</th>
-                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold">Medicine Name</th>
-                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold">Number Of Tablets</th>
-                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold">Expiry Date</th>
-                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold">Dispatched Date</th>
+                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold border-b-2 border-white">Type of Record</th>
+                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold border-b-2 border-white">Company Name</th>
+                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold border-b-2 border-white">Medicine Name</th>
+                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold border-b-2 border-white">Number Of Tablets</th>
+                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold border-b-2 border-white">Expiry Date</th>
+                      <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 text-center font-semibold border-b-2 border-white">Dispatched Date</th>
                       
                     </tr>
                   </thead>
                   <tbody>
                       {% for i in params.records %}
-                      <tr class="flex-row w-full flex-wrap justify-items-center content-center items-center {{i.type}}">
-                        <td class="px-4 py-3 text-center">{{i.type}}</td>
-                        <td class="px-4 py-3 text-center">{{i.comp}}</td>
-                        <td class="px-4 py-3 text-center">{{i.meds}}</td>
-                        <td class="px-4 py-3 text-center">{{i.quan}}</td>
-                        <td class="px-4 py-3 text-center">{{i.date}}</td>                        
-                        <td class="px-4 py-3 text-center">{{i.dispdate}}</td>                        
+                      {% if i.type == 'Pharmacy-New-Stock' %}
+                        
+                      <tr class="flex-row w-full flex-wrap justify-items-center content-center items-center {{i.type}} cursor-pointer">
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.type}}</td>
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.comp}}</td>
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.meds}}</td>
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.quan}}</td>
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.date}}</td>                        
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.dispdate}}</td>                        
                       </tr>
+                        
+                      {% else %}
+
+                      <tr class="flex-row w-full flex-wrap justify-items-center content-center items-center {{i.type}} cursor-pointer">
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.type}}</td>
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.comp}}</td>
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.meds}}</td>
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.quan}}</td>
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.date}}</td>                        
+                        <td class="px-4 py-3 text-center border-t-2 border-gray-200">{{i.dispdate}}</td>                        
+                      </tr>
+
+                      {% endif %}
                       {% endfor %}
                     
                     

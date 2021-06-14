@@ -21,6 +21,21 @@
        
     <link rel="stylesheet" href="/static/css/sidebar.css">
 
+    <style>
+      .MRI:hover{
+        background-color:#fbc5a45c;
+      }
+      .CT-Scan:hover{
+        background-color:#f4a9a85c;
+      }
+      .X-Ray:hover{
+        background-color:#ce97b05c;
+      }
+      .UltraSound:hover{
+        background-color:#afb9c85c;
+      }
+    </style>
+
     <title>{{params.name}}</title>
 
 
@@ -79,21 +94,21 @@
       <section class="text-gray-600 body-font" id="stats">
         <div class="container px-2 py-24 mx-auto">
           <div class="flex flex-wrap -m-4 text-center justify-center record-group">
-            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{params.meta_data.mri}}</h2>
-              <p class="leading-relaxed" onclick="display_mri()">MRI Records</p>
+            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#fbc5a4b6">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-black">{{params.meta_data.mri}}</h2>
+              <p class="leading-relaxed font-medium text-black" onclick="display_mri()">MRI Records</p>
             </div>
-            <div class="p-4 sm:w-1/5 w-1/5 shadow-xl hover:shadow-2xl cursor-pointer mx-1">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{params.meta_data.ctscan}}</h2>
-              <p class="leading-relaxed" onclick="display_ctscan()">CT-Scan Records</p>
+            <div class="p-4 sm:w-1/5 w-1/5 shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#F4A9A8b6">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-black">{{params.meta_data.ctscan}}</h2>
+              <p class="leading-relaxed font-medium text-black" onclick="display_ctscan()">CT-Scan Records</p>
             </div>
-            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{params.meta_data.xray}}</h2>
-              <p class="leading-relaxed" onclick="display_xray()">X-Ray Records</p>
+            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#CE97B0b6">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-black">{{params.meta_data.xray}}</h2>
+              <p class="leading-relaxed font-medium text-black" onclick="display_xray()">X-Ray Records</p>
             </div>
-            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{{params.meta_data.ultra}}</h2>
-              <p class="leading-relaxed" onclick="display_ultra()">UltraSound Records</p>
+            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#AFB9C8b6">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-black">{{params.meta_data.ultra}}</h2>
+              <p class="leading-relaxed font-medium text-black" onclick="display_ultra()">UltraSound Records</p>
             </div>
           </div>
         </div>
@@ -110,8 +125,8 @@
         <div class="container px-5 py-24 mx-auto ">
           <div class="flex flex-wrap -mx-4 -my-8 ">
             {% for i in params.records %}
-            
-            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer hover:bg-opacity-25 hover:bg-blue-200 my-1 {{i.category}}">
+            {% if i.category == 'MRI' %}
+            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer   my-1 {{i.category}}">
               <div class="h-full flex items-start">
                 <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
                   <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">{{i.mon}}</span>
@@ -130,6 +145,72 @@
                 </div>
               </div>
             </div>
+            {% elif i.category == 'CT-Scan'%}
+            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer   my-1 {{i.category}}">
+              <div class="h-full flex items-start">
+                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
+                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">{{i.mon}}</span>
+                  <span class="font-medium text-lg text-gray-800 title-font leading-none">{{i.day}}</span>
+                </div>
+                <div class="flex-grow pl-6">
+                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
+                  <a href="/rad_record_detail{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
+                  <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
+                  <a class="inline-flex items-center">
+                    <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
+                    <span class="flex-grow flex flex-col pl-3">
+                      <span class="title-font font-medium text-gray-900">{{i.doc_name}}</span>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {%elif i.category == 'X-Ray'%}
+
+            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer   my-1 {{i.category}}">
+              <div class="h-full flex items-start">
+                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
+                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">{{i.mon}}</span>
+                  <span class="font-medium text-lg text-gray-800 title-font leading-none">{{i.day}}</span>
+                </div>
+                <div class="flex-grow pl-6">
+                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
+                  <a href="/rad_record_detail{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
+                  <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
+                  <a class="inline-flex items-center">
+                    <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
+                    <span class="flex-grow flex flex-col pl-3">
+                      <span class="title-font font-medium text-gray-900">{{i.doc_name}}</span>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {%elif i.category == 'UltraSound'%}
+            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer   my-1 {{i.category}}">
+              <div class="h-full flex items-start">
+                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
+                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">{{i.mon}}</span>
+                  <span class="font-medium text-lg text-gray-800 title-font leading-none">{{i.day}}</span>
+                </div>
+                <div class="flex-grow pl-6">
+                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
+                  <a href="/rad_record_detail{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
+                  <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
+                  <a class="inline-flex items-center">
+                    <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
+                    <span class="flex-grow flex flex-col pl-3">
+                      <span class="title-font font-medium text-gray-900">{{i.doc_name}}</span>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {% endif %}
+            
 
             {% endfor %}
             
