@@ -20,7 +20,15 @@
        
     <link rel="stylesheet" href="/static/css/sidebar.css">
 
+    {% if params.meta_data.notifications_count > 0 %}
+
+      <title> ({{params.meta_data.notifications_count}}) {{params.name}}</title>
+      
+    {%else %}
+    
     <title>{{params.name}}</title>
+    
+    {% endif %}
 
 
   </head>
@@ -61,11 +69,13 @@
           <ul>
             <li class="home active"><a href="#"><span class="mr-3"></span>Home</a></li>
             <li class="stats"><a href="#stats"><span class="mr-3"></span>Stats</a></li>
-            {% if not params.title == "Patient" %}
-              <li class="records"><a href="/record"><span class="mr-3"></span>Add Record</a></li>
-            {% endif %}
             <li class="explore"><a href="#explore"><span class="mr-3"></span>All Records</a></li>
-            <!-- <li class="notifications"><a href="#notifications"><span class="mr-3"></span>Notifications</a></li> -->
+            <li class="explore"><a href="/notifications"><span class="mr-3"></span>Notifications
+              <span class="oldstyle-nums">
+                {% if params.meta_data.notifications_count > 0 %}
+                  {{params.meta_data.notifications_count}}
+                {% endif %}
+              </a></span></li>            
             <li class="signout"><a href="/signout"><span class="mr-3"></span>Sign out</a></li>
           </ul>
         </div>

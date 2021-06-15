@@ -31,7 +31,6 @@ fs = gridfs.GridFS(mongo.db)
 
 app.config['TRACK_USAGE_USE_FREEGEOIP'] = True
 app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://extreme-ip-lookup.com/json/'
-
 # app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://ip-api.com/json/{ip}'
 app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'include'
 
@@ -107,9 +106,13 @@ def docrecord():
                             'id':id.inserted_id,
                             'patientID':patient_id,
                             'type_record':'Doctor',
-                            'time_created':time_now
+                            'time_created':time_now,
+                            'notified':False
                         })
+
+                        
                         return redirect('/user')
+
                     else:
                         return page_not_found(Exception)
                 else:
@@ -167,7 +170,8 @@ def radrecord():
                             'id':id_org.inserted_id,
                             'patientID':patient_id,
                             'type_record':labtype,
-                            'time_created':time_now
+                            'time_created':time_now,
+                            'notified':False
                         })
                         return redirect('/user')
                     else:
@@ -201,8 +205,6 @@ def pharmanewrecord():
                 tottablets = boxes*strips*tablets
                 exp_date = request.form['expdate']
                 if labid == session['userid']:
-                    
-                    
                     time_now = datetime.now()
                     mongo.db.pharma_stock_database.insert_one({
                         'PharmacyID':labid,
@@ -263,7 +265,8 @@ def pharmadisrecord():
                             'id':id_pharma.inserted_id,
                             'patientID':patient_id,
                             'type_record':labtype,
-                            'time_created':time_now
+                            'time_created':time_now,
+                            'notified':False
                         })
                         return redirect('/user')
                     else:
@@ -311,7 +314,8 @@ def pathorecord():
                             'id':id_patho.inserted_id,
                             'patientID':patient_id,
                             'type_record':labtype,
-                            'time_created':time_now
+                            'time_created':time_now,
+                            'notified':False
                         })
                         return redirect('/user')
                     else:
@@ -436,11 +440,15 @@ def user():
                     data = pickle.load(f)
                 meta_data = data['meta_data']
                 records = data['data']
+                notifications = data['notifications']
                 
+                
+
                 pat_records = mongo.db.pat_database.find({'patientID':userid,"time_created":{"$gt":session['time_first_entry']}})
 
                 if pat_records:
                     for x in pat_records:
+                        notify = dict()
                         if x['type_record'].startswith('Doc'):
                             data = mongo.db.doc_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
@@ -452,6 +460,16 @@ def user():
                                 data['day'] = data['date'].split('-')[-1]
                                 meta_data["appointment"]+=1
                                 records.append(data)
+
+                                if not x['notified']:
+                                    notify['doc_name'] = doc_name['name']
+                                    notify['category'] = 'Appointment'
+                                    notify['heading'] = data['disease']
+                                    notify['date'] = data['date']
+                                    notify['id'] = x['id']
+                                    meta_data['notifications_count']+=1
+                                    notifications.append(notify)
+
                         elif x['type_record'].startswith('Radio'):
                             data = mongo.db.org_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
@@ -461,8 +479,18 @@ def user():
                                 data['heading'] = data['scantype']
                                 data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
                                 data['day'] = data['date'].split('-')[-1]
-                                records.append(data)
                                 meta_data["laboratory"]+=1
+                                records.append(data)
+
+                                if not x['notified']:
+                                    notify['doc_name'] = doc_name['name']
+                                    notify['category'] = 'Radiology/Ultrasound'
+                                    notify['heading'] = data['scantype']
+                                    notify['date'] = data['date']
+                                    notify['id'] = x['id']
+                                    meta_data['notifications_count']+=1
+                                    notifications.append(notify)
+
                         elif x['type_record'].startswith('Pharm'):
                             data = mongo.db.pharma_stock_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
@@ -472,8 +500,18 @@ def user():
                                 data['heading'] = 'Medications'
                                 data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
                                 data['day'] = data['date'].split('-')[-1]
-                                records.append(data)
                                 meta_data["pharmacy"]+=1
+                                records.append(data)
+
+                                if not x['notified']:
+                                    notify['doc_name'] = doc_name['name']
+                                    notify['category'] = 'Pharmacy'
+                                    notify['heading'] = 'Medications'
+                                    notify['date'] = data['date']
+                                    notify['id'] = x['id']
+                                    meta_data['notifications_count']+=1
+                                    notifications.append(notify)
+
                         elif x['type_record'].startswith('Patho'):
                             data = mongo.db.patho_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
@@ -483,13 +521,22 @@ def user():
                                 data['heading'] = data['department_name']
                                 data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
                                 data['day'] = data['date'].split('-')[-1]
-                                records.append(data)
                                 meta_data["laboratory"]+=1
+                                records.append(data)
+
+                                if not x['notified']:
+                                    notify['doc_name'] = doc_name['name']
+                                    notify['category'] = 'Pathology'
+                                    notify['heading'] = data['department_name']
+                                    notify['date'] = data['date']
+                                    notify['id'] = x['id']
+                                    meta_data['notifications_count']+=1
+                                    notifications.append(notify)
                 
                 session['time_first_entry'] = datetime.now()
 
                 with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
-                    pickle.dump({'meta_data':meta_data,'data':records},f)
+                    pickle.dump({'meta_data':meta_data,'data':records,'notifications':notifications},f)
                 
             else:
                 if not os.path.exists('cache'):
@@ -497,12 +544,15 @@ def user():
                 doc_pat_records = 0
                 lab_pat_records = 0
                 pharma_pat_records = 0
+                notifications_count = 0
                 records = list()
+                notifications = list()
                 
                 pat_records = mongo.db.pat_database.find({'patientID':userid})
                 
                 if pat_records:
                     for x in pat_records:
+                        notify = dict()
                         if x['type_record'].startswith('Doc'):
                             data = mongo.db.doc_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
@@ -514,6 +564,15 @@ def user():
                                 data['day'] = data['date'].split('-')[-1]
                                 doc_pat_records+=1
                                 records.append(data)
+                                if not x['notified']:
+                                    notify['doc_name'] = doc_name['name']
+                                    notify['category'] = 'Appointment'
+                                    notify['heading'] = data['disease']
+                                    notify['date'] = data['date']
+                                    notify['id'] = x['id']
+                                    notifications_count+=1
+                                    notifications.append(notify)
+
                         elif x['type_record'].startswith('Radio'):
                             data = mongo.db.org_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
@@ -523,8 +582,18 @@ def user():
                                 data['heading'] = data['scantype']
                                 data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
                                 data['day'] = data['date'].split('-')[-1]
-                                records.append(data)
                                 lab_pat_records+=1
+                                records.append(data)
+
+                                if not x['notified']:
+                                    notify['doc_name'] = doc_name['name']
+                                    notify['category'] = 'Radiology/Ultrasound'
+                                    notify['heading'] = data['scantype']
+                                    notify['date'] = data['date']
+                                    notify['id'] = x['id']
+                                    notifications_count+=1
+                                    notifications.append(notify)
+
                         elif x['type_record'].startswith('Pharm'):
                             data = mongo.db.pharma_stock_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
@@ -536,6 +605,16 @@ def user():
                                 data['day'] = data['date'].split('-')[-1]
                                 records.append(data)
                                 pharma_pat_records+=1
+
+                                if not x['notified']:
+                                    notify['doc_name'] = doc_name['name']
+                                    notify['category'] = 'Pharmacy'
+                                    notify['heading'] = 'Medications'
+                                    notify['date'] = data['date']
+                                    notify['id'] = x['id']
+                                    notifications_count+=1
+                                    notifications.append(notify)
+
                         elif x['type_record'].startswith('Patho'):
                             data = mongo.db.patho_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
@@ -545,15 +624,24 @@ def user():
                                 data['heading'] = data['department_name']
                                 data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
                                 data['day'] = data['date'].split('-')[-1]
-                                records.append(data)
                                 lab_pat_records+=1
+                                records.append(data)
+
+                                if not x['notified']:
+                                    notify['doc_name'] = doc_name['name']
+                                    notify['category'] = 'Pathology'
+                                    notify['heading'] = data['department_name']
+                                    notify['date'] = data['date']
+                                    notify['id'] = x['id']
+                                    notifications_count+=1
+                                    notifications.append(notify)
             
-                meta_data = {'appointment':doc_pat_records,'pharmacy':pharma_pat_records,'laboratory':lab_pat_records}
+                meta_data = {'appointment':doc_pat_records,'pharmacy':pharma_pat_records,'laboratory':lab_pat_records,'notifications_count':notifications_count}
 
                 session['time_first_entry'] = datetime.now()
 
                 with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
-                    pickle.dump({'meta_data':meta_data,'data':records},f)
+                    pickle.dump({'meta_data':meta_data,'data':records,'notifications':notifications},f)
                 
             return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
 
@@ -844,6 +932,49 @@ def user():
 
     return redirect('/login')
 
+
+@t.include
+@app.route('/notifications', methods=['GET'])
+def notifications():
+    if 'userid' in session:
+        userid = session['userid']
+        with open(os.path.join('cache',f'{userid}_cache.pkl'),'rb') as f:
+            data = pickle.load(f)
+        meta_data = data['meta_data']
+        notifications = data['notifications']
+        return render_template('notifications.html',params={'meta_data':meta_data,'notifications':notifications})
+    else:
+        return redirect('/login')
+
+
+@t.include
+@app.route('/notified<int:sno>')
+def notified(sno):
+    if 'userid' in session:
+        userid = session['userid']
+        with open(os.path.join('cache',f'{userid}_cache.pkl'),'rb') as f:
+            data = pickle.load(f)
+        
+        records = data['data']
+        meta_data = data['meta_data']
+        notifications = data['notifications']
+        data = notifications[sno-1]
+        # print(data)
+        pat_records = mongo.db.pat_database.update({'patientID':userid,'id':data['id']},{'$set':{'notified':True}})
+
+        notifications.pop(sno-1)
+        meta_data['notifications_count']-=1
+
+        with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
+            pickle.dump({'meta_data':meta_data,'data':records,'notifications':notifications},f)
+
+        return redirect('/notifications')
+    
+    else:
+        return redirect('/login')
+
+
+
 @t.include
 @app.route('/patho_record_detail<int:sno>')
 def patho_record_detail(sno):
@@ -869,6 +1000,7 @@ def patho_record_detail(sno):
                 'date':data['date'],
                 'doc_name':data['pat_name']}
         return render_template('patho_record.html',params=params)
+
 
 @t.include
 @app.route('/rad_record_detail<int:sno>')
@@ -897,6 +1029,7 @@ def rad_record_detail(sno):
                 'image':image}
 
         return render_template('rad_record.html',params=params)
+
 
 @t.include
 @app.route('/record_detail<int:sno>')
