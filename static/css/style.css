@@ -1,0 +1,35 @@
+.MRI:hover {
+  background-color: #fbc5a45c;
+}
+
+.CT-Scan:hover {
+  background-color: #f4a9a85c;
+}
+
+.X-Ray:hover {
+  background-color: #ce97b05c;
+}
+
+.UltraSound:hover {
+  background-color: #afb9c85c;
+}
+
+.Pharmacy-New-Stock:hover {
+  background-color: rgba(241, 139, 130, 0.9);
+}
+
+.Pharmacy-Dispatched:hover {
+  background-color: rgba(172, 217, 212, 0.9);
+}
+
+.Hematology:hover {
+  background-color: #f738585c;
+}
+
+.Biochemistry:hover {
+  background-color: #3842595c;
+}
+
+.Clinical-Pathology:hover {
+  background-color: #7AC7C45c;
+}

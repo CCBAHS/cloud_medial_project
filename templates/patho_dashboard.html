@@ -50,7 +50,7 @@
             <div class="col">
               <!-- <strong class="number">892</strong> -->
               <span class="number-label">{{params.title}} -</span>
-              <span class="number-label">Radiology</span>
+              <span class="number-label">Pathology</span>
             </div>
             <!-- <div class="col">
               <strong class="number">22.5k</strong>
@@ -83,22 +83,19 @@
       <section class="text-gray-600 body-font" id="stats">
         <div class="container px-2 py-24 mx-auto">
           <div class="flex flex-wrap -m-4 text-center justify-center record-group">
-            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#fbc5a4b6">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-black">{{params.meta_data.mri}}</h2>
-              <p class="leading-relaxed font-medium text-black" onclick="display_mri()">MRI Records</p>
+            <div class="p-4 sm:w-1/5 w-1/5 shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#384259b9">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-white">{{params.meta_data.biochemistry}}</h2>
+              <p class="leading-relaxed font-medium text-white" onclick="display_ctscan()">Biochemistry Records</p>
             </div>
-            <div class="p-4 sm:w-1/5 w-1/5 shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#F4A9A8b6">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-black">{{params.meta_data.ctscan}}</h2>
-              <p class="leading-relaxed font-medium text-black" onclick="display_ctscan()">CT-Scan Records</p>
+            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#F73859b9">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-white">{{params.meta_data.hematology}}</h2>
+              <p class="leading-relaxed font-medium text-white" onclick="display_mri()">Hematology Records</p>
             </div>
-            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#CE97B0b6">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-black">{{params.meta_data.xray}}</h2>
-              <p class="leading-relaxed font-medium text-black" onclick="display_xray()">X-Ray Records</p>
+            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#7AC7C4b9">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-white">{{params.meta_data.clinical}}</h2>
+              <p class="leading-relaxed font-medium text-white" onclick="display_xray()">Clinical Pathology Records</p>
             </div>
-            <div class="p-4 sm:w-1/5 w-1/5  shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#AFB9C8b6">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-black">{{params.meta_data.ultra}}</h2>
-              <p class="leading-relaxed font-medium text-black" onclick="display_ultra()">UltraSound Records</p>
-            </div>
+            
           </div>
         </div>
       </section>
@@ -114,7 +111,7 @@
         <div class="container px-5 py-24 mx-auto ">
           <div class="flex flex-wrap -mx-4 -my-8 ">
             {% for i in params.records %}
-            {% if i.category == 'MRI' %}
+            {% if i.category == 'Biochemistry' %}
             <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer   my-1 {{i.category}}">
               <div class="h-full flex items-start">
                 <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
@@ -122,19 +119,20 @@
                   <span class="font-medium text-lg text-gray-800 title-font leading-none">{{i.day}}</span>
                 </div>
                 <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
-                  <a href="/rad_record_detail{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
+                  <a href="/patho_record_detail{{loop.index}}">
+                    <h2 class="title-font text-xl font-medium text-gray-900 mb-3">{{i.category}}</h2>
+                  </a>
                   <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
                   <a class="inline-flex items-center">
                     <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
                     <span class="flex-grow flex flex-col pl-3">
-                      <span class="title-font font-medium text-gray-900">{{i.doc_name}}</span>
+                      <span class="title-font font-medium text-gray-900">{{i.pat_name}}</span>
                     </span>
                   </a>
                 </div>
               </div>
             </div>
-            {% elif i.category == 'CT-Scan'%}
+            {% elif i.category == 'Hematology'%}
             <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer   my-1 {{i.category}}">
               <div class="h-full flex items-start">
                 <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
@@ -142,42 +140,22 @@
                   <span class="font-medium text-lg text-gray-800 title-font leading-none">{{i.day}}</span>
                 </div>
                 <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
-                  <a href="/rad_record_detail{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
-                  <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
-                  <a class="inline-flex items-center">
-                    <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
-                    <span class="flex-grow flex flex-col pl-3">
-                      <span class="title-font font-medium text-gray-900">{{i.doc_name}}</span>
-                    </span>
+                  <a href="/patho_record_detail{{loop.index}}">
+                    <h2 class="title-font text-xl font-medium text-gray-900 mb-3">{{i.category}}</h2>
                   </a>
-                </div>
-              </div>
-            </div>
-
-            {%elif i.category == 'X-Ray'%}
-
-            <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer   my-1 {{i.category}}">
-              <div class="h-full flex items-start">
-                <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">{{i.mon}}</span>
-                  <span class="font-medium text-lg text-gray-800 title-font leading-none">{{i.day}}</span>
-                </div>
-                <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
-                  <a href="/rad_record_detail{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
                   <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
                   <a class="inline-flex items-center">
                     <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
                     <span class="flex-grow flex flex-col pl-3">
-                      <span class="title-font font-medium text-gray-900">{{i.doc_name}}</span>
+                      <span class="title-font font-medium text-gray-900">{{i.pat_name}}</span>
                     </span>
                   </a>
                 </div>
               </div>
             </div>
 
-            {%elif i.category == 'UltraSound'%}
+            {%elif i.category == 'Clinical-Pathology'%}
+
             <div class="py-8 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer   my-1 {{i.category}}">
               <div class="h-full flex items-start">
                 <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
@@ -185,18 +163,21 @@
                   <span class="font-medium text-lg text-gray-800 title-font leading-none">{{i.day}}</span>
                 </div>
                 <div class="flex-grow pl-6">
-                  <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
-                  <a href="/rad_record_detail{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
+                  <a href="/patho_record_detail{{loop.index}}">
+                    <h2 class="title-font text-xl font-medium text-gray-900 mb-3">{{i.category}}</h2>
+                  </a>
                   <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
                   <a class="inline-flex items-center">
                     <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
                     <span class="flex-grow flex flex-col pl-3">
-                      <span class="title-font font-medium text-gray-900">{{i.doc_name}}</span>
+                      <span class="title-font font-medium text-gray-900">{{i.pat_name}}</span>
                     </span>
                   </a>
                 </div>
               </div>
             </div>
+
+            
 
             {% endif %}
             
@@ -212,7 +193,6 @@
     </main>
     
     
-
     
   </body>
   
@@ -223,7 +203,6 @@
   <script src="/static/js/popper.js"></script>
   <script src="/static/js/bootstrap.js"></script>
   <script src="/static/js/user_dashboard.js"></script>
-
       
         
 

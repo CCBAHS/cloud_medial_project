@@ -341,8 +341,8 @@ def login():
         # g.username = username
         # adding the user to active user's list
         # popping the data of user if found in active users but not in session variable
-        if os.path.exists(os.path.join('temp','activeusers.pkl')):
-            with open(os.path.join('temp','activeusers.pkl'),'rb') as f:
+        if os.path.exists(os.path.join('cache','activeusers.pkl')):
+            with open(os.path.join('cache','activeusers.pkl'),'rb') as f:
                 activeusers = pickle.load(f)
             
             user = activeusers['users']
@@ -350,32 +350,40 @@ def login():
             if username in user:
                 # not logged out but closed the browser
                 
-                if os.path.exists(os.path.join('temp',f'{username}_temp.pkl')):
+                if os.path.exists(os.path.join('cache',f'{username}_cache.pkl')):
                     
-                    os.remove(os.path.join('temp',f'{username}_temp.pkl'))
+                    os.remove(os.path.join('cache',f'{username}_cache.pkl'))
                     user.remove(username)
                     
 
             user.append(username)
             
             activeusers['users'] = user
-            with open(os.path.join('temp','activeusers.pkl'),'wb') as f:
+            with open(os.path.join('cache','activeusers.pkl'),'wb') as f:
                 pickle.dump(activeusers,f)
                
 
         else:
-            if not os.path.exists('temp'):
-                os.mkdir('temp')
+            if not os.path.exists('cache'):
+                os.mkdir('cache')
             activeusers = dict()
             users = list()
             users.append(username)
             activeusers['users'] = users
-            with open(os.path.join('temp','activeusers.pkl'),'wb') as f:
+            with open(os.path.join('cache','activeusers.pkl'),'wb') as f:
                 pickle.dump(activeusers,f)
               
 
         session['userid'] = userid['username']
         session["time_first_entry"] = datetime.now()
+
+        user_record = mongo.db.users_activity.find_one({'userid':userid['username']})
+        if user_record:
+            mongo.db.users_activity.update_one({'userid':userid['username']},{'$addToSet':{'activity':{'title':'login','time':datetime.now()}}})
+        else:
+            mongo.db.users_activity.insert_one({'userid':userid['username'],'activity':[{'title':'login','time':datetime.now()}]})
+            
+
 
         return redirect("/user")
     else:
@@ -423,8 +431,8 @@ def user():
             # 2. We need to check if there is a new data point then we also need to update it in the dashboard and into the cache memory as well
             # 3. we'll be caching all the records at/before updatedin the databse when the user first enters the dashboard and then we'll be querying the database again based on the timestamp as a keyword 
 
-            if os.path.exists(os.path.join('temp',f'{userid}_temp.pkl')):
-                with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
+            if os.path.exists(os.path.join('cache',f'{userid}_cache.pkl')):
+                with open(os.path.join('cache',f'{userid}_cache.pkl'),'rb') as f:
                     data = pickle.load(f)
                 meta_data = data['meta_data']
                 records = data['data']
@@ -480,12 +488,12 @@ def user():
                 
                 session['time_first_entry'] = datetime.now()
 
-                with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
                     pickle.dump({'meta_data':meta_data,'data':records},f)
                 
             else:
-                if not os.path.exists('temp'):
-                    os.mkdir('temp')
+                if not os.path.exists('cache'):
+                    os.mkdir('cache')
                 doc_pat_records = 0
                 lab_pat_records = 0
                 pharma_pat_records = 0
@@ -544,7 +552,7 @@ def user():
 
                 session['time_first_entry'] = datetime.now()
 
-                with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
                     pickle.dump({'meta_data':meta_data,'data':records},f)
                 
             return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
@@ -561,8 +569,8 @@ def user():
             type_org = mongo.db.test_collection.find_one({'username':userid,'title':'Organisation'})
             type_org = type_org['organisation_type']
             if type_org.startswith('Pha'):
-                if os.path.exists(os.path.join('temp',f'{userid}_temp.pkl')):
-                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
+                if os.path.exists(os.path.join('cache',f'{userid}_cache.pkl')):
+                    with open(os.path.join('cache',f'{userid}_cache.pkl'),'rb') as f:
                         data = pickle.load(f)
                     meta_data = data['meta_data']
                     records = data['data']                  
@@ -595,12 +603,12 @@ def user():
                       
                     session['time_first_entry'] = datetime.now()
                     
-                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                    with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
                         pickle.dump({'meta_data':meta_data,'data':records},f)
                     
                 else:
-                    if not os.path.exists('temp'):
-                        os.mkdir('temp')
+                    if not os.path.exists('cache'):
+                        os.mkdir('cache')
                     disp_records = 0
                     stock_records = 0
                     records = list()
@@ -634,14 +642,14 @@ def user():
 
                     session['time_first_entry'] = datetime.now()
 
-                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                    with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
                         pickle.dump({'meta_data':meta_data,'data':records},f)
                     
                 return render_template('pharma_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'type':"Pharmacy",'meta_data':meta_data,'records':records})
 
             elif type_org.startswith('Rad'):
-                if os.path.exists(os.path.join('temp',f'{userid}_temp.pkl')):
-                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
+                if os.path.exists(os.path.join('cache',f'{userid}_cache.pkl')):
+                    with open(os.path.join('cache',f'{userid}_cache.pkl'),'rb') as f:
                         data = pickle.load(f)
                     meta_data = data['meta_data']
                     records = data['data']
@@ -686,12 +694,12 @@ def user():
                     
                     session['time_first_entry'] = datetime.now()
 
-                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                    with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
                         pickle.dump({'meta_data':meta_data,'data':records},f)
                     
                 else:
-                    if not os.path.exists('temp'):
-                        os.mkdir('temp')
+                    if not os.path.exists('cache'):
+                        os.mkdir('cache')
                     mri_records = 0
                     ctscan_records = 0
                     xray_records = 0
@@ -738,15 +746,129 @@ def user():
 
                     session['time_first_entry'] = datetime.now()
 
-                    with open(os.path.join('temp',f'{userid}_temp.pkl'),'wb') as f:
+                    with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
                         pickle.dump({'meta_data':meta_data,'data':records},f)
                     
                 return render_template('rad_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
+
+            elif type_org.startswith('Pat'):
+                if os.path.exists(os.path.join('cache',f'{userid}_cache.pkl')):
+                    with open(os.path.join('cache',f'{userid}_cache.pkl'),'rb') as f:
+                        data = pickle.load(f)
+                    meta_data = data['meta_data']
+                    records = data['data']
+                    
+                    org_records = mongo.db.patho_database.find({'LaboratoryID':userid,"time_created":{"$gt":session['time_first_entry']}})
+                    if org_records:
+                        for x in org_records:
+                            data = x
+                            
+                            pat_name = mongo.db.test_collection.find_one({'username':x['patientID']})
+                            if pat_name:
+                                data['pat_name'] = pat_name['name']
+                                if x['department_name'] == "Biochemistry":
+                                    data['category'] = 'Biochemistry'
+                                    # data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    meta_data['biochemistry']+=1
+                                    records.append(data)
+                                elif x['department_name'] == "Hematology":
+                                    data['category'] = 'Hematology'
+                                    # data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    records.append(data)
+                                    meta_data['hematology']+=1
+                                elif x['department_name'] == "Clinical-Pathology":
+                                    data['category'] = 'Clinical-Pathology'
+                                    # data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    records.append(data)
+                                    meta_data['clinical']+=1
+                    
+                    session['time_first_entry'] = datetime.now()
+
+                    with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
+                        pickle.dump({'meta_data':meta_data,'data':records},f)
+                    
+                else:
+                    if not os.path.exists('cache'):
+                        os.mkdir('cache')
+                    biochemistry_records = 0
+                    hematology_records = 0
+                    clinical_records = 0
+                    records = list()
+                    org_records = mongo.db.patho_database.find({'LaboratoryID':userid})
+                    if org_records:
+                        for x in org_records:
+                            data = x
+                            
+                            pat_name = mongo.db.test_collection.find_one({'username':x['patientID']})
+                            if pat_name:
+                                data['pat_name'] = pat_name['name']
+                                if x['department_name'] == "Biochemistry":
+                                    data['category'] = 'Biochemistry'
+                                    # data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    biochemistry_records+=1
+                                    records.append(data)
+                                elif x['department_name'] == "Hematology":
+                                    data['category'] = 'Hematology'
+                                    # data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    records.append(data)
+                                    hematology_records+=1
+                                elif x['department_name'] == "Clinical-Pathology":
+                                    data['category'] = 'Clinical-Pathology'
+                                    # data['heading'] = x['bodypart']
+                                    data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                    data['day'] = x['date'].split('-')[-1]
+                                    records.append(data)
+                                    clinical_records+=1
+                                
+                
+                    meta_data = {'biochemistry':biochemistry_records,'hematology':hematology_records,'clinical':clinical_records}
+
+                    session['time_first_entry'] = datetime.now()
+
+                    with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
+                        pickle.dump({'meta_data':meta_data,'data':records},f)
+                    
+                return render_template('patho_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
 
         return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':{'appointment':0,'pharmacy':0,'laboratory':0}})
 
     return redirect('/login')
 
+@t.include
+@app.route('/patho_record_detail<int:sno>')
+def patho_record_detail(sno):
+    if 'userid' in session:
+        userid = session['userid']
+        with open(os.path.join('cache',f'{userid}_cache.pkl'),'rb') as f:
+            data = pickle.load(f)
+        
+        data = data['data'][sno-1]
+        records = list()
+        for i in data['investigations']:
+            rec = i.split('-')
+            recd = dict()
+            if len(rec) > 1:
+                recd['inves'] = rec[0]
+            
+                recd['value'] = rec[1]
+            
+            records.append(recd)
+        
+        params ={'dep_name':data['department_name'],
+                'records':records,
+                'date':data['date'],
+                'doc_name':data['pat_name']}
+        return render_template('patho_record.html',params=params)
 
 @t.include
 @app.route('/rad_record_detail<int:sno>')
@@ -755,7 +877,7 @@ def rad_record_detail(sno):
         g.track_var['userid'] = session["userid"]
 
         userid = session['userid']
-        with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
+        with open(os.path.join('cache',f'{userid}_cache.pkl'),'rb') as f:
             data = pickle.load(f)
 
                 
@@ -783,7 +905,7 @@ def record_detail(sno):
         g.track_var['userid'] = session["userid"]
 
         userid = session['userid']
-        with open(os.path.join('temp',f'{userid}_temp.pkl'),'rb') as f:
+        with open(os.path.join('cache',f'{userid}_cache.pkl'),'rb') as f:
             data = pickle.load(f)
         
         data = data['data'][sno-1]
@@ -819,16 +941,17 @@ def record_detail(sno):
             for i in data['investigations']:
                 rec = i.split('-')
                 recd = dict()
+                if len(rec) > 1:
+                    recd['inves'] = rec[0]
                 
-                recd['inves'] = rec[0]
-                
-                recd['value'] = rec[1]
+                    recd['value'] = rec[1]
                 
                 records.append(recd)
             
             params ={'dep_name':data['department_name'],
                     'records':records,
-                    'date':data['date']}
+                    'date':data['date'],
+                    'doc_name':data['doc_name']}
             return render_template('patho_record.html',params=params)
         elif data['category'].startswith('Pha'):
 
@@ -866,17 +989,19 @@ def signout():
         session.pop("title", None)
         session.pop("time_first_entry", None)
         
-        with open(os.path.join('temp','activeusers.pkl'),'rb') as f:
+        with open(os.path.join('cache','activeusers.pkl'),'rb') as f:
             activeusers = pickle.load(f)
             
         user = activeusers['users']
         user.remove(userid)
         activeusers['users'] = user
-        with open(os.path.join('temp','activeusers.pkl'),'wb') as f:
+        with open(os.path.join('cache','activeusers.pkl'),'wb') as f:
             pickle.dump(activeusers,f)
 
-        if os.path.exists(os.path.join('temp',f'{userid}_temp.pkl')):
-            os.remove(os.path.join('temp',f'{userid}_temp.pkl'))
+        if os.path.exists(os.path.join('cache',f'{userid}_cache.pkl')):
+            os.remove(os.path.join('cache',f'{userid}_cache.pkl'))
+
+        mongo.db.users_activity.update_one({'userid':userid},{'$addToSet':{'activity':{'title':'logout','time':datetime.now()}}})
     
     return redirect('/')
 
