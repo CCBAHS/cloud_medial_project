@@ -58,6 +58,9 @@ class secret_keys:
     def mongo_uri(self):
         return os.getenv('MONGO_URI')
 
+    def password_secret_key(self):
+        return os.getenv('SECRET_KEY')
+
 
 class mailingbot:
     def __init__(self):

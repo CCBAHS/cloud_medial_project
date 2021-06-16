@@ -1,24 +1,6 @@
-<!doctype html>
-<html lang="en">
-  <head>
-   
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+{% extends "basic_dashboard.html" %}
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
-
-    <link rel="shortcut icon" href="/static/images/icons/icon.png" type="image/png">
-
-    <link rel="stylesheet" href="/static/css/bootstrap.css">
-
-    <link rel="stylesheet" href="/static/css/owl.carousel.css">
-
-    <link rel="stylesheet" href="/static/css/tailwind.css">
-       
-    <link rel="stylesheet" href="/static/css/sidebar.css">
+{% block title %}
 
     {% if params.meta_data.notifications_count > 0 %}
 
@@ -30,9 +12,12 @@
     
     {% endif %}
 
+{% endblock %}
+ 
 
-  </head>
-  <body>
+{% block body %}
+
+  
   
     
     <aside class="sidebar">
@@ -82,6 +67,18 @@
       </div>
       
     </aside>
+
+    {% if params.meta_data.notifications_count > 0 %}
+    
+    <div class="bg-indigo-900 text-center py-4 lg:px-4">
+      <div class="p-2 bg-indigo-800 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex" role="alert">
+        <span class="flex rounded-full bg-indigo-500 uppercase px-2 py-1 text-xs font-bold mr-3 cursor-pointer" onclick="location.href='/notifications'">Notifications</span>
+        <span class="font-semibold mr-2 text-left flex-auto">You have {{params.meta_data.notifications_count}} notifications.</span>
+        <svg class="fill-current opacity-75 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.95 10.707l.707-.707L8 4.343 6.586 5.757 10.828 10l-4.242 4.243L8 15.657l4.95-4.95z"/></svg>
+      </div>
+    </div>
+    
+    {% endif %}
 
     <main id="main-section">
 
@@ -204,17 +201,7 @@
     
 
     
-  </body>
-  
-
   
   
-  <script src="/static/js/jquery.js"></script>
-  <script src="/static/js/popper.js"></script>
-  <script src="/static/js/bootstrap.js"></script>
-  <script src="/static/js/user_dashboard.js"></script>
 
-      
-        
-
-</html>
+{% endblock %}

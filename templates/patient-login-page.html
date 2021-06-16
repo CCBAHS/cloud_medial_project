@@ -60,7 +60,7 @@
             <div class="heading-text">
                 Create New Account
             </div>
-            <form method="POST" action="/account" class="create-account-form" enctype=multipart/form-data>
+            <form method="POST" action="/account" class="create-account-form" enctype=multipart/form-data > 
                 
                 <div class="create-div">
                     <label for="name" class="create-label"> Name : </label>
@@ -88,11 +88,11 @@
                 </div>
                 <div class="none" id="org-type" >
                     <label for="orgtype" class="create-label"> Type of Organisation? </label>
-                    <input type="radio" name="orgtype" id="pathology" class="radio-input mx--3" value="Pathology" required>
+                    <input type="radio" name="orgtype" id="pathology" class="radio-input mx--3" value="Pathology" >
                     <label for="patient" class = "create-iden">Pathology</label>
-                    <input type="radio" name="orgtype" id="pharmacy" class="radio-input" value="Pharmacy" required>
+                    <input type="radio" name="orgtype" id="pharmacy" class="radio-input" value="Pharmacy" >
                     <label for="doctor" class = "create-iden">Pharmacy</label>
-                    <input type="radio" name="orgtype" id="radiology" class="radio-input" value="Radiology/UltraSound" required>
+                    <input type="radio" name="orgtype" id="radiology" class="radio-input" value="Radiology/UltraSound" >
                     <label for="organisation" class = "create-iden">Radiology/UltraSound</label>
                 </div>
                 <div class='create-div'>
@@ -133,7 +133,7 @@
                     <label for="agree">I agree to the terms and conditions.</label>
                 </div>
                 <div class="create-div">
-                    `<input type="submit" class="create-submit" id="submit-account-create-btn" onclick="no_reload()">
+                    <input type="submit" class="create-submit" id="submit-account-create-btn">
                 </div>
             </form>
         </div>
@@ -156,7 +156,7 @@
                          <input type="text" class="reset-input" name='reset-adhaar' id="reset-adhaar" placeholder="" pattern="[0-9]{12}" required>
                     </div>
                     <div>
-                        <input type="submit" class="reset-submit" id="reset-submit" onclick="reset_password()">
+                        <input type="submit" class="reset-submit" id="reset-submit" >
                     </div>
                 </form>
             </div>

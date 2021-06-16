@@ -8,9 +8,10 @@ import codecs
 import gridfs
 import json
 import requests
+import cryptocode
 
 # Flask backend 
-from flask import Flask, render_template, request, redirect, session, g
+from flask import Flask, render_template, request, redirect, session, g 
 from flask_pymongo import PyMongo
 from flask_track_usage import TrackUsage
 from flask_track_usage.storage.mongo import MongoStorage
@@ -102,7 +103,7 @@ def docrecord():
                             'time_created':time_now
                         })
                         
-                        mongo.db.pat_database.insert_one({
+                        _ = mongo.db.pat_database.insert_one({
                             'id':id.inserted_id,
                             'patientID':patient_id,
                             'type_record':'Doctor',
@@ -130,7 +131,7 @@ def docrecord():
 def radrecord():
     if "userid" in session:
         g.track_var['userid'] = session["userid"]
-        if session['userid'].startswith('ORG'):
+        if session['userid'].startswith('ORGRAD'):
             if request.method == 'POST':
                 labtype = "Radiological/Ultrasound"
                 labid = request.form['labid']
@@ -166,7 +167,7 @@ def radrecord():
                             'time_created':time_now
                         })
                         
-                        mongo.db.pat_database.insert_one({
+                        _ = mongo.db.pat_database.insert_one({
                             'id':id_org.inserted_id,
                             'patientID':patient_id,
                             'type_record':labtype,
@@ -191,7 +192,7 @@ def radrecord():
 def pharmanewrecord():
     if "userid" in session:
         g.track_var['userid'] = session["userid"]
-        if session['userid'].startswith('ORG'):
+        if session['userid'].startswith('ORGPHA'):
             if request.method == 'POST':
                 labtype = "Pharmacy-New-Stock"
                 labid = request.form['labid']
@@ -206,7 +207,7 @@ def pharmanewrecord():
                 exp_date = request.form['expdate']
                 if labid == session['userid']:
                     time_now = datetime.now()
-                    mongo.db.pharma_stock_database.insert_one({
+                    _ = mongo.db.pharma_stock_database.insert_one({
                         'PharmacyID':labid,
                         'PharmaStockType': labtype,
                         'date':date,
@@ -237,7 +238,7 @@ def pharmanewrecord():
 def pharmadisrecord():
     if "userid" in session:
         g.track_var['userid'] = session["userid"]
-        if session['userid'].startswith('ORG'):
+        if session['userid'].startswith('ORGPHA'):
             if request.method == 'POST':
                 labtype = "Pharmacy-Dispatched"
                 labid = request.form['labid']
@@ -261,7 +262,7 @@ def pharmadisrecord():
                             'time_created':time_now
                         })
                         
-                        mongo.db.pat_database.insert_one({
+                        _ = mongo.db.pat_database.insert_one({
                             'id':id_pharma.inserted_id,
                             'patientID':patient_id,
                             'type_record':labtype,
@@ -287,7 +288,7 @@ def pharmadisrecord():
 def pathorecord():    
     if "userid" in session:
         g.track_var['userid'] = session["userid"]
-        if session['userid'].startswith('ORG'):
+        if session['userid'].startswith('ORGPAT'):
             if request.method == 'POST':
                 labtype = "Pathology"
                 labid = request.form['labid']
@@ -310,7 +311,7 @@ def pathorecord():
                             'time_created':time_now
                         })
                         
-                        mongo.db.pat_database.insert_one({
+                        _ = mongo.db.pat_database.insert_one({
                             'id':id_patho.inserted_id,
                             'patientID':patient_id,
                             'type_record':labtype,
@@ -338,58 +339,60 @@ def login():
     '''
     if request.method == 'POST':
         username = request.form['userid']
-        password = request.form['password']
-        userid = mongo.db.test_collection.find_one_or_404({"username":username,"password":password})
-        # print(userid)
-
-        # g.username = username
-        # adding the user to active user's list
-        # popping the data of user if found in active users but not in session variable
-        if os.path.exists(os.path.join('cache','activeusers.pkl')):
-            with open(os.path.join('cache','activeusers.pkl'),'rb') as f:
-                activeusers = pickle.load(f)
-            
-            user = activeusers['users']
-            
-            if username in user:
-                # not logged out but closed the browser
+        password = request.form['password']        
+        userid = mongo.db.test_collection.find_one({"username":username})
+        decoded_password = cryptocode.decrypt(userid['password'], sk.password_secret_key())
+        if userid and decoded_password == password:
+        
+            if os.path.exists(os.path.join('cache','activeusers.pkl')):
+                with open(os.path.join('cache','activeusers.pkl'),'rb') as f:
+                    activeusers = pickle.load(f)
                 
-                if os.path.exists(os.path.join('cache',f'{username}_cache.pkl')):
+                user = activeusers['users']
+                
+                if username in user:
+                    # not logged out but closed the browser
                     
-                    os.remove(os.path.join('cache',f'{username}_cache.pkl'))
-                    user.remove(username)
-                    
+                    if os.path.exists(os.path.join('cache',f'{username}_cache.pkl')):
+                        
+                        os.remove(os.path.join('cache',f'{username}_cache.pkl'))
+                        user.remove(username)
+                        
 
-            user.append(username)
-            
-            activeusers['users'] = user
-            with open(os.path.join('cache','activeusers.pkl'),'wb') as f:
-                pickle.dump(activeusers,f)
-               
+                user.append(username)
+                
+                activeusers['users'] = user
+                with open(os.path.join('cache','activeusers.pkl'),'wb') as f:
+                    pickle.dump(activeusers,f)
+                
+
+            else:
+                if not os.path.exists('cache'):
+                    os.mkdir('cache')
+                activeusers = dict()
+                users = list()
+                users.append(username)
+                activeusers['users'] = users
+                with open(os.path.join('cache','activeusers.pkl'),'wb') as f:
+                    pickle.dump(activeusers,f)
+                
+
+            session['userid'] = userid['username']
+            session["time_first_entry"] = datetime.now()
+
+            user_record = mongo.db.users_activity.find_one({'userid':userid['username']})
+            if user_record:
+                _ = mongo.db.users_activity.update_one({'userid':userid['username']},{'$addToSet':{'activity':{'title':'login','time':datetime.now()}}})
+            else:
+                _ = mongo.db.users_activity.insert_one({'userid':userid['username'],'activity':[{'title':'login','time':datetime.now()}]})
+                
+
+
+            return redirect("/user")
 
         else:
-            if not os.path.exists('cache'):
-                os.mkdir('cache')
-            activeusers = dict()
-            users = list()
-            users.append(username)
-            activeusers['users'] = users
-            with open(os.path.join('cache','activeusers.pkl'),'wb') as f:
-                pickle.dump(activeusers,f)
-              
+            return page_not_found(Exception)
 
-        session['userid'] = userid['username']
-        session["time_first_entry"] = datetime.now()
-
-        user_record = mongo.db.users_activity.find_one({'userid':userid['username']})
-        if user_record:
-            mongo.db.users_activity.update_one({'userid':userid['username']},{'$addToSet':{'activity':{'title':'login','time':datetime.now()}}})
-        else:
-            mongo.db.users_activity.insert_one({'userid':userid['username'],'activity':[{'title':'login','time':datetime.now()}]})
-            
-
-
-        return redirect("/user")
     else:
         if "userid" in session:
             return redirect("/user")
@@ -649,7 +652,7 @@ def user():
         # Dashboard 2 -> Doctor
         if session['title'] == 'Doctor':
             print('Doctor')
-            pass
+            # pass
 
 
         # Dashboard 3 -> Organization
@@ -960,7 +963,7 @@ def notified(sno):
         notifications = data['notifications']
         data = notifications[sno-1]
         # print(data)
-        pat_records = mongo.db.pat_database.update({'patientID':userid,'id':data['id']},{'$set':{'notified':True}})
+        _ = mongo.db.pat_database.update_one({'patientID':userid,'id':data['id']},{'$set':{'notified':True}})
 
         notifications.pop(sno-1)
         meta_data['notifications_count']-=1
@@ -1052,6 +1055,7 @@ def record_detail(sno):
                     'diagnostic':data['tests']}
 
             return render_template('record.html',params=params)
+
         elif data['category'].startswith('Rad'):
 
             img = fs.get(data['id'])
@@ -1068,6 +1072,7 @@ def record_detail(sno):
                     'image':image}
 
             return render_template('rad_record.html',params=params)
+
         elif data['category'].startswith('Pat'):
             
             records = list()
@@ -1086,6 +1091,7 @@ def record_detail(sno):
                     'date':data['date'],
                     'doc_name':data['doc_name']}
             return render_template('patho_record.html',params=params)
+
         elif data['category'].startswith('Pha'):
 
             medicines = list()
@@ -1134,7 +1140,7 @@ def signout():
         if os.path.exists(os.path.join('cache',f'{userid}_cache.pkl')):
             os.remove(os.path.join('cache',f'{userid}_cache.pkl'))
 
-        mongo.db.users_activity.update_one({'userid':userid},{'$addToSet':{'activity':{'title':'logout','time':datetime.now()}}})
+        _ = mongo.db.users_activity.update_one({'userid':userid},{'$addToSet':{'activity':{'title':'logout','time':datetime.now()}}})
     
     return redirect('/')
 
@@ -1170,20 +1176,22 @@ def account():
 
         filename = username + '.png'
         
+        password_hash = cryptocode.encrypt(password,sk.password_secret_key())
+
         try:
             if not mongo.db.test_collection.find_one({'adhaar':adhaar}):
                 id = mongo.save_file(filename,request.files['photo'])
                 
                 if title.startswith('Org'):                   
                     orgtype = request.form['orgtype']
-                    mongo.db.test_collection.insert_one({"id":id,
+                    _ = mongo.db.test_collection.insert_one({"id":id,
                                                     "name":name,
                                                     "dob":dob,
                                                     "gender":gender,
                                                     "title":title,
                                                     "organisation_type":orgtype,
                                                     "username":username,
-                                                    "password":password,
+                                                    "password":password_hash,
                                                     "address":address,
                                                     "state":state,
                                                     "city":city,
@@ -1195,13 +1203,13 @@ def account():
                                                     "time_created":time_created})
                 else:
                     
-                    mongo.db.test_collection.insert_one({"id":id,
+                    _ = mongo.db.test_collection.insert_one({"id":id,
                                                     "name":name,
                                                     "dob":dob,
                                                     "gender":gender,
                                                     "title":title,
                                                     "username":username,
-                                                    "password":password,
+                                                    "password":password_hash,
                                                     "address":address,
                                                     "state":state,
                                                     "city":city,
@@ -1239,7 +1247,7 @@ def reset():
             name = user['name']
             mailbot = mailingbot()
             otp = mailbot.send_otp(email,{'username':username,'name':name})
-            mongo.db.otp.insert_one({"username":username,"otp":otp})
+            _ = mongo.db.otp.insert_one({"username":username,"otp":otp})
             params ={'title':'Reset Password','verify':False,'username':username}
             return render_template('middle_page.html',params=params)
         else:
@@ -1259,13 +1267,14 @@ def otp(username):
         otp = request.form['otp']
         otp_db = mongo.db.otp.find_one({'username': username})['otp']
         password_user = mongo.db.test_collection.find_one({'username': username})['password']
+        decoded_password = cryptocode.decrypt(password_user, sk.password_secret_key())
         email_user = mongo.db.test_collection.find_one({'username': username})['email']
         name_user = mongo.db.test_collection.find_one({'username': username})['name']
         valid = mailbot.validate_otp(otp_db,otp)
         
         if valid:
-            mailbot.send_password(email_user,{'name':name_user,'username':username,'password':password_user})
-            mongo.db.otp.delete_one({'username': username})
+            mailbot.send_password(email_user,{'name':name_user,'username':username,'password':decoded_password})
+            _ = mongo.db.otp.delete_one({'username': username})
             return redirect("/login")
         else:
             return page_not_found(Exception)

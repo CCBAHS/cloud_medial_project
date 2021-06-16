@@ -22,11 +22,6 @@ function forget_password(){
 }
 
 // for sending a mail to reset the password
-function reset_password(){
-    // sending reset password link to the email id
-    preventDefault();
-    
-}
 
 
 
@@ -115,6 +110,9 @@ function password_verification(){
 function trigger_type(){
     document.getElementById("org-type").classList.remove("none");
     document.getElementById("org-type").classList.add("create-div");
+    document.getElementById('pharmacy').setAttribute('required',true);
+    document.getElementById('pathology').setAttribute('required',true);
+    document.getElementById('radiology').setAttribute('required',true);
 };
 
 
@@ -122,5 +120,8 @@ function untrigger_type(){
     if(document.querySelector('#org-type').matches('.create-div')){
         document.getElementById("org-type").classList.remove("create-div");
         document.getElementById("org-type").classList.add("none");
+        document.getElementById('pharmacy').setAttribute('required',false);
+        document.getElementById('pathology').setAttribute('required',false);
+        document.getElementById('radiology').setAttribute('required',false);
     }
 };

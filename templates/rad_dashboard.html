@@ -1,35 +1,15 @@
+{% extends "basic_dashboard.html" %}
 
-<!doctype html>
-<html lang="en">
-  <head>
-   
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
-
-    <link rel="shortcut icon" href="/static/images/icons/icon.png" type="image/png">
-
-    <link rel="stylesheet" href="/static/css/bootstrap.css">
-
-    <link rel="stylesheet" href="/static/css/owl.carousel.css">
-
-    <link rel="stylesheet" href="/static/css/tailwind.css">
-       
-    <link rel="stylesheet" href="/static/css/sidebar.css">
-
+{% block css %}
     <link rel="stylesheet" href="/static/css/style.css">
-
+{% endblock %}
    
-
+{% block title %}
     <title>{{params.name}}</title>
+{% endblock %}
 
 
-  </head>
-  <body>
+{% block body %}
   
     
     <aside class="sidebar">
@@ -211,17 +191,8 @@
     
 
     
-  </body>
+{% endblock %}
   
 
   
   
-  <script src="/static/js/jquery.js"></script>
-  <script src="/static/js/popper.js"></script>
-  <script src="/static/js/bootstrap.js"></script>
-  <script src="/static/js/user_dashboard.js"></script>
-
-      
-        
-
-</html>
