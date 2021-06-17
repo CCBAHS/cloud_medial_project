@@ -59,7 +59,7 @@ def page_not_found(e):
 @app.route('/',methods=['GET'])
 def index():
     with open('track.json','a') as f:
-        data =  json.loads(requests.get('http://extreme-ip-lookup.com/json').text)
+        data =  json.loads(requests.get('http://extreme-ip-lookup.com/{request.remote_addr}/json').text)
 #         f.write(str(data))
         print(data)
         json.dump(data,f)
