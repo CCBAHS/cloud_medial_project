@@ -42,7 +42,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # mstorage = MongoStorage('user','tracker',host='mongodb+srv://testcluster.f7oii.mongodb.net/myFirstDatabase',username='bths',password='BThSProject1.0')
 sql_db = SQLAlchemy(app)
-migrate = Migrate(app,db)
+migrate = Migrate(app,sql_db)
 sstorage = SQLStorage(db=sql_db,table_name='tracker')
 
 t = TrackUsage(app,[sstorage])
