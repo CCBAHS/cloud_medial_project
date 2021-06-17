@@ -30,8 +30,10 @@
     
     
     <section class="text-gray-600 body-font relative ">
+      <span class="mx-5"></span><span class="sm:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span><span class="lg:mx-10"></span>
+          <button class="flex-row-reverse ml-auto text-white bg-indigo-500 border-0 mx-5 my-5 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded absolute " onclick="location.href='/user'">Back to Dashboard</button>
 
-        <div class="container px-5 py-24 mx-auto" id='select-section'>
+        <!-- <div class="container px-5 py-24 mx-auto" id='select-section'>
             <div class="text-center w-full mb-12 bg-white bg-opacity-25 rounded-lg py-5 shadow-2xl">
                 <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900"> Type of Organization </h1>
               
@@ -59,9 +61,11 @@
                   </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <div class="container px-5 py-24 mx-auto none" id='radiology-section'>
+        {% if userid[3:6] == 'RAD'  %}
+        
+        <div class="container px-5 py-24 mx-auto " id='radiology-section'>
           <div class="flex flex-col text-center w-full mb-12 bg-white bg-opacity-25 rounded-lg py-5 shadow-2xl">
             <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Add Record</h1>
             
@@ -164,7 +168,11 @@ impression ..." required></textarea>
         </div>
         </div>
 
-        <div class="container px-5 py-24 mx-auto none" id='pathology-section'>
+        {% elif userid[3:6] == 'PAT' %}
+        
+        <div class="container px-5 py-24 mx-auto " id='pathology-section'>
+
+
           <div class="flex flex-col text-center w-full mb-12 bg-white bg-opacity-25 rounded-lg py-5 shadow-2xl">
             <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Add Record</h1>
             
@@ -234,10 +242,12 @@ blood heamoglobin - 13gm%" required></textarea>
         </div>
         </div>
 
-        <div class="container px-5 py-24 mx-auto none" id='pharmacy-section'>
+        {% elif userid[3:6] == 'PHA' %}
+
+        <div class="container px-5 py-24 mx-auto " id='pharmacy-section'>
 
           <div class="text-center w-full mb-12 bg-white bg-opacity-25 rounded-lg py-5 shadow-2xl" id="pharma-type-section">
-            <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900"> Type of Organization </h1>
+            <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900"> Type of Record </h1>
           
         <div class="lg:w-1/2 md:w-2/3 mx-auto flex flex-row flex-wrap ">
             <div class="p-2 w-1/2">
@@ -254,7 +264,7 @@ blood heamoglobin - 13gm%" required></textarea>
                 </div>
             </div>
             <div class="p-2 w-full">
-               <button class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg shadow-md"  id="btn-pharma" type="submit">Submit</button>
+               <button class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg shadow-md"  id="btn-pharma" type="submit">Next</button>
               </div>
         </div>
       </div>
@@ -395,13 +405,14 @@ blood heamoglobin - 13gm%" required></textarea>
 
         </div>
           
+        {% endif %}
+
       </section>
-    
+
 
 </body>
 <script src="/static/js/jquery.js"></script>
   <script src="/static/js/popper.js"></script>
   <script src="/static/js/bootstrap.js"></script>
   <script src="/static/js/user_dashboard.js"></script>
-  <script src="/static/js/patient_login_page.js"></script>
 </html>

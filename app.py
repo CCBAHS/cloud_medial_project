@@ -59,8 +59,11 @@ def record():
 
         if session["userid"].startswith("DOC"):
             return render_template('details_form_doc.html')
+
         elif session['userid'].startswith('ORG'):
-            return render_template('records_form_org.html')
+            userid = session['userid']
+            return render_template('records_form_org.html',userid=userid)
+
         else:
             return page_not_found(Exception)
     else:
@@ -342,6 +345,8 @@ def login():
         password = request.form['password']        
         userid = mongo.db.test_collection.find_one({"username":username})
         decoded_password = cryptocode.decrypt(userid['password'], sk.password_secret_key())
+        # print(password)
+        # print(decoded_password)
         if userid and decoded_password == password:
         
             if os.path.exists(os.path.join('cache','activeusers.pkl')):

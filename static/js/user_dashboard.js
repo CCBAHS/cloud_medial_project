@@ -115,38 +115,38 @@ $(function () {
 
 // });
 
-const btn = document.querySelector("#btn-submit");
-btn.onclick = function () {
-  const rbs = document.querySelectorAll('input[name="lab-type"]');
-  let selectedValue;
-  for (const rb of rbs) {
-    if (rb.checked) {
-      selectedValue = rb.value;
-      break;
-    }
-  }
-  if (selectedValue.match("pathology")) {
-    document.getElementById("pathology-section").style.display = "block";
-    document.getElementById("radiology-section").style.display = "none";
-    document.getElementById("pharmacy-section").style.display = "none";
-    document.getElementById("select-section").style.display = "none";
-  } else if (selectedValue.match("radiology")) {
-    document.getElementById("radiology-section").style.display = "block";
-    document.getElementById("pathology-section").style.display = "none";
-    document.getElementById("pharmacy-section").style.display = "none";
-    document.getElementById("select-section").style.display = "none";
-  } else if (selectedValue.match("pharmacy")) {
-    document.getElementById("pharmacy-section").style.display = "block";
-    document.getElementById("pathology-section").style.display = "none";
-    document.getElementById("radiology-section").style.display = "none";
-    document.getElementById("select-section").style.display = "none";
-  } else {
-    document.getElementById("select-section").style.display = "block";
-    document.getElementById("radiology-section").style.display = "none";
-    document.getElementById("pharmacy-section").style.display = "none";
-    document.getElementById("pathology-section").style.display = "none";
-  }
-};
+// const btn = document.querySelector("#btn-submit");
+// btn.onclick = function () {
+//   const rbs = document.querySelectorAll('input[name="lab-type"]');
+//   let selectedValue;
+//   for (const rb of rbs) {
+//     if (rb.checked) {
+//       selectedValue = rb.value;
+//       break;
+//     }
+//   }
+//   if (selectedValue.match("pathology")) {
+//     document.getElementById("pathology-section").style.display = "block";
+//     document.getElementById("radiology-section").style.display = "none";
+//     document.getElementById("pharmacy-section").style.display = "none";
+//     document.getElementById("select-section").style.display = "none";
+//   } else if (selectedValue.match("radiology")) {
+//     document.getElementById("radiology-section").style.display = "block";
+//     document.getElementById("pathology-section").style.display = "none";
+//     document.getElementById("pharmacy-section").style.display = "none";
+//     document.getElementById("select-section").style.display = "none";
+//   } else if (selectedValue.match("pharmacy")) {
+//     document.getElementById("pharmacy-section").style.display = "block";
+//     document.getElementById("pathology-section").style.display = "none";
+//     document.getElementById("radiology-section").style.display = "none";
+//     document.getElementById("select-section").style.display = "none";
+//   } else {
+//     document.getElementById("select-section").style.display = "block";
+//     document.getElementById("radiology-section").style.display = "none";
+//     document.getElementById("pharmacy-section").style.display = "none";
+//     document.getElementById("pathology-section").style.display = "none";
+//   }
+// };
 
 const btn1 = document.querySelector("#btn-pharma");
 btn1.onclick = function () {
