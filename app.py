@@ -13,6 +13,7 @@ import cryptocode
 # Flask backend 
 from flask import Flask, render_template, request, redirect, session, g 
 from flask_pymongo import PyMongo
+from flask_sqlalchemy import SQLAlchemy
 from flask_track_usage import TrackUsage
 from flask_track_usage.storage.sql import SQLStorage
 
@@ -35,8 +36,12 @@ app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://extreme-ip-lookup.com/jso
 # app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://ip-api.com/json/{ip}'
 app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'include'
 
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///todo.db"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 # mstorage = MongoStorage('user','tracker',host='mongodb+srv://testcluster.f7oii.mongodb.net/myFirstDatabase',username='bths',password='BThSProject1.0')
-sstorage = SQLStorage()
+sql_db = SQLAlchemy(app)
+sstorage = SQLStorage(db=sql_db)
 
 t = TrackUsage(app,[sstorage])
 
