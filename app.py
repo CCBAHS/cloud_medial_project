@@ -14,7 +14,7 @@ import cryptocode
 from flask import Flask, render_template, request, redirect, session, g 
 from flask_pymongo import PyMongo
 from flask_track_usage import TrackUsage
-from flask_track_usage.storage.mongo import MongoStorage
+from flask_track_usage.storage.sql import SQLStorage
 
 # using external classes
 from ext_classes import secret_keys
@@ -35,9 +35,10 @@ app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://extreme-ip-lookup.com/jso
 # app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://ip-api.com/json/{ip}'
 app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'include'
 
-mstorage = MongoStorage('user','tracker',host='mongodb+srv://testcluster.f7oii.mongodb.net/myFirstDatabase',username='bths',password='BThSProject1.0')
+# mstorage = MongoStorage('user','tracker',host='mongodb+srv://testcluster.f7oii.mongodb.net/myFirstDatabase',username='bths',password='BThSProject1.0')
+sstorage = SQLStorage()
 
-t = TrackUsage(app,[mstorage])
+t = TrackUsage(app,[sstorage])
 
 
 @app.errorhandler(404)
