@@ -60,6 +60,8 @@ def page_not_found(e):
 def index():
     with open('track.json','a') as f:
         data =  json.loads(requests.get('http://extreme-ip-lookup.com/json').text)
+#         f.write(str(data))
+        print(data)
         json.dump(data,f)
         
     return render_template('home.html')    
