@@ -35,7 +35,7 @@ app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://extreme-ip-lookup.com/jso
 # app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://ip-api.com/json/{ip}'
 app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'include'
 
-mstorage = MongoStorage().setup(database=mongo.db,collection='tracker')
+mstorage = MongoStorage('user','tracker').setup(host='mongodb+srv://testcluster.f7oii.mongodb.net/myFirstDatabase',username='bths',password='BThSProject1.0')
 
 t = TrackUsage(app,[mstorage])
 
