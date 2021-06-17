@@ -35,7 +35,7 @@ app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://extreme-ip-lookup.com/jso
 # app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://ip-api.com/json/{ip}'
 app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'include'
 
-mstorage = MongoStorage('test','tracker')
+mstorage = MongoStorage(mongo.db,'tracker')
 
 t = TrackUsage(app,[mstorage])
 
