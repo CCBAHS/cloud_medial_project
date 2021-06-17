@@ -7,7 +7,7 @@ import base64
 import codecs
 import gridfs
 import json
-from urllib2 import urlopen
+import requests
 import requests
 import cryptocode
 
@@ -59,8 +59,7 @@ def page_not_found(e):
 @app.route('/',methods=['GET'])
 def index():
     with open('track.json','a') as f:
-        data = urlopen('http://extreme-ip-lookup.com/{request.remote_addr}/json')
-        data = json.load(data)
+        data =  json.loads(requests.get('http://extreme-ip-lookup.com/json').text)
         json.dump(data,f)
         
     return render_template('home.html')    
