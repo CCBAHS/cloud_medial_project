@@ -7,6 +7,7 @@ import base64
 import codecs
 import gridfs
 import json
+from urllib2 import urlopen
 import requests
 import cryptocode
 
@@ -44,7 +45,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # mstorage = MongoStorage('user','tracker',host='mongodb+srv://testcluster.f7oii.mongodb.net/myFirstDatabase',username='bths',password='BThSProject1.0')
 sql_db = SQLAlchemy(app)
 migrate = Migrate(app,sql_db)
-sstorage = SQLStorage(db=sql_db,table_name='tracker_users')
+sstorage = SQLStorage(db=sql_db,table_name='tracker_user')
 
 t = TrackUsage(app,[sstorage])
 
@@ -57,6 +58,11 @@ def page_not_found(e):
 @t.include
 @app.route('/',methods=['GET'])
 def index():
+    with open('track.json','a') as f:
+        data = urlopen('http://extreme-ip-lookup.com/{request.remote_addr}/json')
+        data = json.load(data)
+        json.dump(data,f)
+        
     return render_template('home.html')    
 
 
