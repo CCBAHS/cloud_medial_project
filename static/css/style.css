@@ -34,7 +34,14 @@
   background-color: #7AC7C45c;
 }
 
-.doc-1{
-  background-color: #F5A96244;
+.doc-1:hover{
+  background-color: #C9E4C5;
+}
 
+.doc-2:hover{
+  background-color: #c1ac959a;
+}
+
+.w-max-cont{
+  width: max-content;
 }

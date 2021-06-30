@@ -39,7 +39,7 @@
         
         <div class="nav-menu">
           <ul>
-            <li class="stats"><a href="/user"><span class="mr-3"></span>Back to Dashboard</a></li>
+            <li class="stats"><a href="/user"><span class="mr-3"></span>Home</a></li>
           </ul>
         </div>
       </div>
@@ -92,7 +92,7 @@
                 </div>
                 <div class="flex-grow pl-6">
                   <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
-                  <a href="/display_records{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
+                  <a href="/display_records_{{params.username + loop.index|string }}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
                   <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
                   <a class="inline-flex items-center">
                     <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
@@ -117,7 +117,7 @@
                 </div>
                 <div class="flex-grow pl-6">
                   <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
-                  <a href="/display_records{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
+                  <a href="/display_records_{{params.username + loop.index|string }}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
                   <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
                   <a class="inline-flex items-center">
                     <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
@@ -142,7 +142,7 @@
                 </div>
                 <div class="flex-grow pl-6">
                   <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{i.category}}</h2>
-                  <a href="/display_records{{loop.index}}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
+                  <a href="/display_records_{{params.username + loop.index|string }}"><h1 class="title-font text-xl font-medium text-gray-900 mb-3" id="main-heading">{{i.heading}}</h1></a>
                   <!-- <p class="leading-relaxed mb-5">Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.</p> -->
                   <a class="inline-flex items-center">
                     <img alt="blog" src="/static/images/doc_logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">

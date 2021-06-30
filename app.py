@@ -44,6 +44,8 @@ t = TrackUsage(app,[mstorage])
 def page_not_found(e):
     return render_template('error.html')
 
+        
+
 
 @t.include
 @app.route('/',methods=['GET'])
@@ -682,9 +684,16 @@ def user():
                                 data['pat_name'] = data1['name']
                                 data['pat_id'] = x['patientID']
                                 data['pat_records'] = 0
-                                data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
-                                data['day'] = x['date'].split('-')[-1]
                                 
+                                data['yr'] = 'yrs'
+                                data['age'] = int(str(datetime.now() - datetime.strptime(data1['dob'],"%Y-%m-%d")).split(' ')[0])/365
+                                
+                                if data['age'] < 1:
+                                    data['age'] = int(data['age']*365)
+                                    data['yr'] = 'days'
+                                else:
+                                    data['age'] = int(data['age'])
+
                                 total_patients_list.append(x['patientID'])
                                 total_patients+=1
                                 records.append(data)
@@ -723,8 +732,15 @@ def user():
                                 data['pat_name'] = data1['name']
                                 data['pat_id'] = x['patientID']
                                 data['pat_records'] = 0
-                                data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
-                                data['day'] = x['date'].split('-')[-1]
+                                
+                                data['yr'] = 'yrs'
+                                data['age'] = int(str(datetime.now() - datetime.strptime(data1['dob'],"%Y-%m-%d")).split(' ')[0])/365
+
+                                if data['age'] < 1:
+                                    data['age'] = int(data['age']*365)
+                                    data['yr'] = 'days'
+                                else:
+                                    data['age'] = int(data['age'])
                                 
                                 total_patients_list.append(x['patientID'])
                                 total_patients+=1
@@ -1293,13 +1309,104 @@ def show_records(userid):
 
         session['time_first_entry'] = datetime.now()
 
-        # with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
-        #     pickle.dump({'meta_data':meta_data,'data':records,'notifications':notifications},f)
-            
+        doc_username = session['userid']
+
+        with open(os.path.join('cache',f'{doc_username}_cache.pkl'),'rb') as f:
+            data = pickle.load(f)
+        
+        data[str(userid)] = records
+        
+        with open(os.path.join('cache',f'{doc_username}_cache.pkl'),'wb') as f:
+            pickle.dump(data, f)
+
         return render_template('patient_detail.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
 
     else:
         return redirect('/login')
+
+
+@t.include
+@app.route('/display_records_<string:userid>')
+def display_records(userid):
+    if 'userid' in session:
+        username = session['userid']    
+        g.track_var['userid'] = session["userid"]
+
+        with open(os.path.join('cache',f'{username}_cache.pkl'),'rb') as f:
+            data = pickle.load(f)
+        
+        sno = int(userid[-1])
+        pat_id = userid[:-1]
+        data = data[pat_id][sno-1]
+        
+
+        if data['category'].startswith('App'):
+            params = {'doc_name':data['doc_name'],
+                    'date':data['date'],
+                    'prescription':data['medicines'],
+                    'advice':data['advice'],
+                    'diagnostic':data['tests']}
+
+            return render_template('record.html',params=params)
+
+        elif data['category'].startswith('Rad'):
+
+            img = fs.get(data['id'])
+            base64_data = codecs.encode(img.read(), 'base64')
+            image = base64_data.decode('utf-8')
+
+
+            params ={'date':data['date'],
+            'doc_name':data['doc_name'],
+                    'scantype':data['scantype'],
+                    'bodypart':data['bodypart'],
+                    'observation':data['observation'],
+                    'impressions':data['impressions'],
+                    'image':image}
+
+            return render_template('rad_record.html',params=params)
+
+        elif data['category'].startswith('Pat'):
+            
+            records = list()
+            for i in data['investigations']:
+                rec = i.split('-')
+                recd = dict()
+                if len(rec) > 1:
+                    recd['inves'] = rec[0]
+                
+                    recd['value'] = rec[1]
+                
+                records.append(recd)
+            
+            params ={'dep_name':data['department_name'],
+                    'records':records,
+                    'date':data['date'],
+                    'doc_name':data['doc_name']}
+            return render_template('patho_record.html',params=params)
+
+        elif data['category'].startswith('Pha'):
+
+            medicines = list()
+            for i in data['medicines']:
+                med = i.split('-')
+                meds = dict()
+                
+                meds['comp'] = med[0]
+                
+                meds['meds'] = med[1]
+               
+                meds['quan'] = med[2]
+                
+                medicines.append(meds)
+            
+            params ={'PharmaStockType':data['PharmaStockType'],
+                    'medicines':medicines,
+                    'date':data['date']}
+            return render_template('pharma_pat_record.html',params=params)
+    else:
+        return redirect('/login')
+
 
 @t.include
 @app.route('/signout')
