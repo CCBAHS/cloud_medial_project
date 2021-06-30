@@ -8,16 +8,13 @@ import codecs
 import gridfs
 import json
 import requests
-import requests
 import cryptocode
 
 # Flask backend 
 from flask import Flask, render_template, request, redirect, session, g 
 from flask_pymongo import PyMongo
-from flask_sqlalchemy import SQLAlchemy
 from flask_track_usage import TrackUsage
-from flask_track_usage.storage.sql import SQLStorage
-from flask_migrate import Migrate
+from flask_track_usage.storage.mongo import MongoStorage
 
 # using external classes
 from ext_classes import secret_keys
@@ -38,16 +35,9 @@ app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://extreme-ip-lookup.com/jso
 # app.config['TRACK_USAGE_FREEGEOIP_ENDPOINT'] = 'http://ip-api.com/json/{ip}'
 app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'include'
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://sloixhfsqeysdo:c4e589a071b5cfa801b7520308527a6ab527cc283827f1e04f0f1e4b5b1def59@ec2-54-163-97-228.compute-1.amazonaws.com:5432/d2egb1ndgev118"
-# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///tracker.db" 
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+mstorage = MongoStorage('test','tracker')
 
-# # mstorage = MongoStorage('user','tracker',host='mongodb+srv://testcluster.f7oii.mongodb.net/myFirstDatabase',username='bths',password='BThSProject1.0')
-# sql_db = SQLAlchemy(app)
-# migrate = Migrate(app,sql_db)
-# sstorage = SQLStorage(db=sql_db,table_name='tracker_user')
-
-t = TrackUsage(app,[])
+t = TrackUsage(app,[mstorage])
 
 
 @app.errorhandler(404)
@@ -58,12 +48,6 @@ def page_not_found(e):
 @t.include
 @app.route('/',methods=['GET'])
 def index():
-    with open('track.json','a') as f:
-        data =  json.loads(requests.get(f'http://extreme-ip-lookup.com/json/{request.remote_addr}').text)
-#         f.write(str(data))
-        print(data)
-        json.dump(data,f)
-        
     return render_template('home.html')    
 
 
@@ -672,8 +656,95 @@ def user():
 
         # Dashboard 2 -> Doctor
         if session['title'] == 'Doctor':
-            print('Doctor')
-            # pass
+
+            if os.path.exists(os.path.join('cache',f'{userid}_cache.pkl')):
+                with open(os.path.join('cache',f'{userid}_cache.pkl'),'rb') as f:
+                    data = pickle.load(f)
+                
+                meta_data = data['meta_data']
+                records = data['data']   
+                total_patients_list = meta_data['total_patients_list']
+                total_patients = meta_data['total_patients']            
+                
+
+                doc_records = mongo.db.doc_database.find({'doctorID':userid})
+                
+                if doc_records:
+                    for x in doc_records:
+                        data = dict()
+                        data1 = mongo.db.test_collection.find_one({'username':x['patientID']})
+                        data2 = mongo.db.pat_database.find_one({'patientID':x['patientID'],'id':x['_id']})
+
+                        if data1 and data2:
+                            if x['patientID'] not in total_patients_list:
+                                
+
+                                data['pat_name'] = data1['name']
+                                data['pat_id'] = x['patientID']
+                                data['pat_records'] = 0
+                                data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                data['day'] = x['date'].split('-')[-1]
+                                
+                                total_patients_list.append(x['patientID'])
+                                total_patients+=1
+                                records.append(data)
+                                
+                            
+                                
+                        
+  
+
+                meta_data = {'total_patients':total_patients,'total_patients_list':total_patients_list}
+
+                session['time_first_entry'] = datetime.now()
+
+                with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
+                    pickle.dump({'meta_data':meta_data,'data':records},f)
+                
+            else:
+                if not os.path.exists('cache'):
+                    os.mkdir('cache')
+                total_patients = 0
+                total_patients_list = list()
+                records = list()
+                
+                doc_records = mongo.db.doc_database.find({'doctorID':userid})
+                
+                if doc_records:
+                    for x in doc_records:
+                        data = dict()
+                        data1 = mongo.db.test_collection.find_one({'username':x['patientID']})
+                        data2 = mongo.db.pat_database.find_one({'patientID':x['patientID'],'id':x['_id']})
+
+                        if data1 and data2:
+                            if x['patientID'] not in total_patients_list:
+                                
+
+                                data['pat_name'] = data1['name']
+                                data['pat_id'] = x['patientID']
+                                data['pat_records'] = 0
+                                data['mon'] = mon_code.month_codes(x['date'].split('-')[1])
+                                data['day'] = x['date'].split('-')[-1]
+                                
+                                total_patients_list.append(x['patientID'])
+                                total_patients+=1
+                                records.append(data)
+                                
+                            
+                                
+                        
+  
+
+                meta_data = {'total_patients':total_patients,'total_patients_list':total_patients_list}
+
+                session['time_first_entry'] = datetime.now()
+
+                with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
+                    pickle.dump({'meta_data':meta_data,'data':records},f)
+                
+            return render_template('doctor_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
+
+            
 
 
         # Dashboard 3 -> Organization
@@ -952,7 +1023,7 @@ def user():
                     
                 return render_template('patho_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
 
-        return render_template('user_dashboard.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':{'appointment':0,'pharmacy':0,'laboratory':0}})
+        
 
     return redirect('/login')
 
@@ -1135,6 +1206,100 @@ def record_detail(sno):
     else:
         return redirect('/login')
 
+@t.include
+@app.route('/show_records_<string:userid>')
+def show_records(userid):
+    if 'userid' in session:
+        # print(userid)
+        g.track_var['userid'] = session["userid"]
+
+        user = mongo.db.test_collection.find_one({'username':userid})
+        # print(user)
+
+        name = user['name']
+        city = user['city']
+        title = user['title']
+        img = fs.get(user['id'])
+        base64_data = codecs.encode(img.read(), 'base64')
+        image = base64_data.decode('utf-8')
+
+        session['title'] = title
+        
+        mon_code = codes()
+        doc_pat_records = 0
+        lab_pat_records = 0
+        pharma_pat_records = 0
+        records = list()
+        
+        pat_records = mongo.db.pat_database.find({'patientID':userid})
+        
+        if pat_records:
+            for x in pat_records:
+                if x['type_record'].startswith('Doc'):
+                    data = mongo.db.doc_database.find_one({'patientID':userid,'_id':x['id'],'doctorID':session['userid']})
+                    if data:
+                        doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                        data['doc_name'] = doc_name['name']
+                        data['category'] = 'Appointment'
+                        data['heading'] = data['disease']
+                        data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                        data['day'] = data['date'].split('-')[-1]
+                        doc_pat_records+=1
+                        records.append(data)
+
+                elif x['type_record'].startswith('Radio'):
+                    data = mongo.db.org_database.find_one({'patientID':userid,'_id':x['id']})
+                    if data:
+                        doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                        data['doc_name'] = doc_name['name']
+                        data['category'] = 'Radiology/Ultrasound'
+                        data['heading'] = data['scantype']
+                        data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                        data['day'] = data['date'].split('-')[-1]
+                        lab_pat_records+=1
+                        records.append(data)
+
+                    
+
+                elif x['type_record'].startswith('Pharm'):
+                    data = mongo.db.pharma_stock_database.find_one({'patientID':userid,'_id':x['id']})
+                    if data:
+                        doc_name = mongo.db.test_collection.find_one({'username':data['PharmacyID']})
+                        data['doc_name'] = doc_name['name']
+                        data['category'] = 'Pharmacy'
+                        data['heading'] = 'Medications'
+                        data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                        data['day'] = data['date'].split('-')[-1]
+                        records.append(data)
+                        pharma_pat_records+=1
+
+                
+
+                elif x['type_record'].startswith('Patho'):
+                    data = mongo.db.patho_database.find_one({'patientID':userid,'_id':x['id']})
+                    if data:
+                        doc_name = mongo.db.test_collection.find_one({'username':data['LaboratoryID']})
+                        data['doc_name'] = doc_name['name']
+                        data['category'] = 'Pathology'
+                        data['heading'] = data['department_name']
+                        data['mon'] = mon_code.month_codes(data['date'].split('-')[1])
+                        data['day'] = data['date'].split('-')[-1]
+                        lab_pat_records+=1
+                        records.append(data)
+
+                
+
+        meta_data = {'appointment':doc_pat_records,'pharmacy':pharma_pat_records,'laboratory':lab_pat_records}
+
+        session['time_first_entry'] = datetime.now()
+
+        # with open(os.path.join('cache',f'{userid}_cache.pkl'),'wb') as f:
+        #     pickle.dump({'meta_data':meta_data,'data':records,'notifications':notifications},f)
+            
+        return render_template('patient_detail.html',params={"username":userid,"name":name,"city":city,'image':image,'title':title,'meta_data':meta_data,'records':records})
+
+    else:
+        return redirect('/login')
 
 @t.include
 @app.route('/signout')
@@ -1302,4 +1467,4 @@ def otp(username):
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
