@@ -53,9 +53,9 @@
       <section class="text-gray-600 body-font" id="stats">
         <div class="container px-2 py-24 mx-auto">
           <div class="flex flex-wrap -m-4 text-center justify-center record-group">
-            <div class="p-4 sm:w-1/5 w-1/5 shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#B5CDA3">
-              <h2 class="title-font font-medium sm:text-4xl text-3xl text-white">{{params.meta_data.total_patients}}</h2>
-              <p class="leading-relaxed font-medium text-white">Total Patients</p>
+            <div class="p-4 sm:w-1/5 w-1/5 shadow-xl hover:shadow-2xl cursor-pointer mx-1" style="background-color:#FAEBE0">
+              <h2 class="title-font font-medium sm:text-4xl text-3xl text-black">{{params.meta_data.total_patients}}</h2>
+              <p class="leading-relaxed font-medium text-black">Total Patients</p>
             </div>
             
             
@@ -77,17 +77,17 @@
 
             {% if loop.index % 2 == 0 %}
               
-            <div class="py-4 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer mx-2 my-1 doc-1" style="background-color:#B5CDA3">
+            <div class="py-4 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer mx-2 my-1 doc-1" >
               <div class="h-full flex items-start mx-2">
                 <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-white pb-1 mb-2 text-center w-max-cont"> Age </span>
-                  <span class="font-medium text-lg text-white border-t-2 border-white title-font leading-none w-max-cont text-center pt-2">{{i.age}} <p class=" text-white text-xs">{{i.yr}}</p></span>
+                  <span class="text-black pb-1 mb-2 text-center w-max-cont"> Age </span>
+                  <span class="font-medium text-lg text-black border-t-2 border-black title-font leading-none w-max-cont text-center pt-2">{{i.age}} <p class=" text-black text-xs">{{i.yr}}</p></span>
                 </div>
                 <div class="flex-grow pl-6">
-                  <h2 class="title-font text-xl font-medium text-white mx-3">{{i.pat_name}}</h2>
+                  <h2 class="title-font text-xl font-medium text-black mx-3">{{i.pat_name}}</h2>
                   <a href="/show_records_{{i.pat_id}}" class="inline-flex items-center mx-1">
                     <img alt="blog" src="/static/images/patient-logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
-                <h1 class="title-font text-xl font-medium text-white my-3 mx-3" id="main-heading">{{i.pat_id}}</h1>
+                <h1 class="title-font text-xl font-medium text-black my-3 mx-3" id="main-heading">{{i.pat_id}}</h1>
               </a>
                 </div>
               </div>
@@ -98,17 +98,17 @@
               
        
 
-            <div class="py-4 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer my-1 mx-2 doc-2" style="background-color:#C1AC95">
+            <div class="py-4 px-4 lg:w-1/3 shadow-md hover:shadow-xl cursor-pointer my-1 mx-2 doc-2" >
               <div class="h-full flex items-start mx-2">
                 <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-                  <span class="text-white pb-1 mb-2 text-center w-max-cont"> Age </span>
-                  <span class="font-medium text-lg text-white border-t-2 border-white title-font leading-none w-max-cont text-center pt-2">{{i.age}} <p class=" text-white text-xs">{{i.yr}}</p></span>
+                  <span class="text-black pb-1 mb-2 text-center w-max-cont"> Age </span>
+                  <span class="font-medium text-lg text-black border-t-2 border-black title-font leading-none w-max-cont text-center pt-2">{{i.age}} <p class=" text-black text-xs">{{i.yr}}</p></span>
                 </div>
                 <div class="flex-grow pl-6">
-                  <h2 class="title-font text-xl font-medium text-white mx-3">{{i.pat_name}}</h2>
+                  <h2 class="title-font text-xl font-medium text-black mx-3">{{i.pat_name}}</h2>
                   <a href="/show_records_{{i.pat_id}}" class="inline-flex items-center mx-1">
                     <img alt="blog" src="/static/images/patient-logo.png" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
-                <h1 class="title-font text-xl font-medium text-white my-3 mx-3" id="main-heading">{{i.pat_id}}</h1>
+                <h1 class="title-font text-xl font-medium text-black my-3 mx-3" id="main-heading">{{i.pat_id}}</h1>
               </a>
             </div>
           </div>

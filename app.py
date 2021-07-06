@@ -786,6 +786,7 @@ def user():
                                 data['quan'] = x['total_tablets']
                                 data['date'] = x['expiry_date']
                                 data['dispdate'] = '-'
+                                data['dispto'] = '-'
                                 meta_data["stockpharmacy"]+=1
                                 records.append(data)
                             elif x['PharmaStockType'] == "Pharmacy-Dispatched":
@@ -797,6 +798,7 @@ def user():
                                     data['date'] = '-'
                                     data['dispdate'] = x['date']
 
+                                data['dispto'] = x['patientID']
                                 meta_data["dispatchedpharmacy"]+=1
                                 records.append(data)
                       
@@ -822,6 +824,7 @@ def user():
                                 data['quan'] = x['total_tablets']
                                 data['date'] = x['expiry_date']
                                 data['dispdate'] = '-'
+                                data['dispto'] = '-'
                                 stock_records+=1
                                 records.append(data)
                             elif x['PharmaStockType'] == "Pharmacy-Dispatched":
@@ -833,6 +836,7 @@ def user():
                                     data['date'] = '-'
                                     data['dispdate'] = x['date']
 
+                                data['dispto'] = x['patientID']     
                                 disp_records+=1
                                 records.append(data)                        
                         
