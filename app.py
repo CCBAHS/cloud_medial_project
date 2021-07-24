@@ -92,7 +92,7 @@ def docrecord():
                 advice = request.form['advice']
                 advice = advice.replace('\r','').split('\n')
                 if doctor_id == session['userid']:
-                    p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
+                    p_id = mongo.db.users.find_one({'username': patient_id,'title':'Patient'})
                     if p_id:
                         
                         time_now = datetime.now()
@@ -151,8 +151,8 @@ def radrecord():
                 impressions = impressions.replace('\r','').split('\n')
                 filename = patient_id + ''.join(bodypart.split(' ')) + scantype + ''.join(date.split('-')) + '.png'
                 if labid == session['userid']:
-                    p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
-                    d_id = mongo.db.test_collection.find_one({'username': doctor_id,'title':'Doctor'})
+                    p_id = mongo.db.users.find_one({'username': patient_id,'title':'Patient'})
+                    d_id = mongo.db.users.find_one({'username': doctor_id,'title':'Doctor'})
                     if p_id and d_id:
                         id = mongo.save_file(filename,request.files['scanfile'])
                         
@@ -252,8 +252,8 @@ def pharmadisrecord():
                 date = request.form['date']
                 medicines = request.form['dispmeds'].replace('\r','').split('\n')
                 if labid == session['userid']:
-                    p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
-                    d_id = mongo.db.test_collection.find_one({'username': doctor_id,'title':'Doctor'})
+                    p_id = mongo.db.users.find_one({'username': patient_id,'title':'Patient'})
+                    d_id = mongo.db.users.find_one({'username': doctor_id,'title':'Doctor'})
                     if p_id and d_id:
                         
                         time_now = datetime.now()
@@ -302,7 +302,7 @@ def pathorecord():
                 department_name = request.form['dep']
                 investigation = request.form['inve'].replace('\r','').split('\n')
                 if labid == session['userid']:
-                    p_id = mongo.db.test_collection.find_one({'username': patient_id,'title':'Patient'})
+                    p_id = mongo.db.users.find_one({'username': patient_id,'title':'Patient'})
                     if p_id:
                         
                         time_now = datetime.now()
@@ -345,7 +345,7 @@ def login():
     if request.method == 'POST':
         username = request.form['userid']
         password = request.form['password']        
-        userid = mongo.db.test_collection.find_one({"username":username})
+        userid = mongo.db.users.find_one({"username":username})
         decoded_password = cryptocode.decrypt(userid['password'], sk.password_secret_key())
         # print(password)
         # print(decoded_password)
@@ -426,7 +426,7 @@ def user():
     if "userid" in session:
         g.track_var['userid'] = session["userid"]
         userid = session["userid"]
-        user = mongo.db.test_collection.find_one({'username':userid})
+        user = mongo.db.users.find_one({'username':userid})
         name = user['name']
         city = user['city']
         title = user['title']
@@ -462,7 +462,7 @@ def user():
                         if x['type_record'].startswith('Doc'):
                             data = mongo.db.doc_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
-                                doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                                doc_name = mongo.db.users.find_one({'username':data['doctorID']})
                                 data['doc_name'] = doc_name['name']
                                 data['category'] = 'Appointment'
                                 data['heading'] = data['disease']
@@ -483,7 +483,7 @@ def user():
                         elif x['type_record'].startswith('Radio'):
                             data = mongo.db.org_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
-                                doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                                doc_name = mongo.db.users.find_one({'username':data['doctorID']})
                                 data['doc_name'] = doc_name['name']
                                 data['category'] = 'Radiology/Ultrasound'
                                 data['heading'] = data['scantype']
@@ -504,7 +504,7 @@ def user():
                         elif x['type_record'].startswith('Pharm'):
                             data = mongo.db.pharma_stock_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
-                                doc_name = mongo.db.test_collection.find_one({'username':data['PharmacyID']})
+                                doc_name = mongo.db.users.find_one({'username':data['PharmacyID']})
                                 data['doc_name'] = doc_name['name']
                                 data['category'] = 'Pharmacy'
                                 data['heading'] = 'Medications'
@@ -525,7 +525,7 @@ def user():
                         elif x['type_record'].startswith('Patho'):
                             data = mongo.db.patho_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
-                                doc_name = mongo.db.test_collection.find_one({'username':data['LaboratoryID']})
+                                doc_name = mongo.db.users.find_one({'username':data['LaboratoryID']})
                                 data['doc_name'] = doc_name['name']
                                 data['category'] = 'Pathology'
                                 data['heading'] = data['department_name']
@@ -566,7 +566,7 @@ def user():
                         if x['type_record'].startswith('Doc'):
                             data = mongo.db.doc_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
-                                doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                                doc_name = mongo.db.users.find_one({'username':data['doctorID']})
                                 data['doc_name'] = doc_name['name']
                                 data['category'] = 'Appointment'
                                 data['heading'] = data['disease']
@@ -586,7 +586,7 @@ def user():
                         elif x['type_record'].startswith('Radio'):
                             data = mongo.db.org_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
-                                doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                                doc_name = mongo.db.users.find_one({'username':data['doctorID']})
                                 data['doc_name'] = doc_name['name']
                                 data['category'] = 'Radiology/Ultrasound'
                                 data['heading'] = data['scantype']
@@ -607,7 +607,7 @@ def user():
                         elif x['type_record'].startswith('Pharm'):
                             data = mongo.db.pharma_stock_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
-                                doc_name = mongo.db.test_collection.find_one({'username':data['PharmacyID']})
+                                doc_name = mongo.db.users.find_one({'username':data['PharmacyID']})
                                 data['doc_name'] = doc_name['name']
                                 data['category'] = 'Pharmacy'
                                 data['heading'] = 'Medications'
@@ -628,7 +628,7 @@ def user():
                         elif x['type_record'].startswith('Patho'):
                             data = mongo.db.patho_database.find_one({'patientID':userid,'_id':x['id']})
                             if data:
-                                doc_name = mongo.db.test_collection.find_one({'username':data['LaboratoryID']})
+                                doc_name = mongo.db.users.find_one({'username':data['LaboratoryID']})
                                 data['doc_name'] = doc_name['name']
                                 data['category'] = 'Pathology'
                                 data['heading'] = data['department_name']
@@ -674,7 +674,7 @@ def user():
                 if doc_records:
                     for x in doc_records:
                         data = dict()
-                        data1 = mongo.db.test_collection.find_one({'username':x['patientID']})
+                        data1 = mongo.db.users.find_one({'username':x['patientID']})
                         data2 = mongo.db.pat_database.find_one({'patientID':x['patientID'],'id':x['_id']})
 
                         if data1 and data2:
@@ -722,7 +722,7 @@ def user():
                 if doc_records:
                     for x in doc_records:
                         data = dict()
-                        data1 = mongo.db.test_collection.find_one({'username':x['patientID']})
+                        data1 = mongo.db.users.find_one({'username':x['patientID']})
                         data2 = mongo.db.pat_database.find_one({'patientID':x['patientID'],'id':x['_id']})
 
                         if data1 and data2:
@@ -765,7 +765,7 @@ def user():
 
         # Dashboard 3 -> Organization
         if session['title'] == 'Organisation':
-            type_org = mongo.db.test_collection.find_one({'username':userid,'title':'Organisation'})
+            type_org = mongo.db.users.find_one({'username':userid,'title':'Organisation'})
             type_org = type_org['organisation_type']
             if type_org.startswith('Pha'):
                 if os.path.exists(os.path.join('cache',f'{userid}_cache.pkl')):
@@ -863,7 +863,7 @@ def user():
                         for x in org_records:
                             data = x
                             
-                            doc_name = mongo.db.test_collection.find_one({'username':x['doctorID']})
+                            doc_name = mongo.db.users.find_one({'username':x['doctorID']})
                             if doc_name:
                                 data['doc_name'] = doc_name['name']
                                 if x['scantype'] == "MRI":
@@ -913,7 +913,7 @@ def user():
                         for x in org_records:
                             data = x
                             
-                            doc_name = mongo.db.test_collection.find_one({'username':x['doctorID']})
+                            doc_name = mongo.db.users.find_one({'username':x['doctorID']})
                             if doc_name:
                                 x['doc_name'] = doc_name['name']
                                 if x['scantype'] == "MRI":
@@ -966,7 +966,7 @@ def user():
                         for x in org_records:
                             data = x
                             
-                            pat_name = mongo.db.test_collection.find_one({'username':x['patientID']})
+                            pat_name = mongo.db.users.find_one({'username':x['patientID']})
                             if pat_name:
                                 data['pat_name'] = pat_name['name']
                                 if x['department_name'] == "Biochemistry":
@@ -1008,7 +1008,7 @@ def user():
                         for x in org_records:
                             data = x
                             
-                            pat_name = mongo.db.test_collection.find_one({'username':x['patientID']})
+                            pat_name = mongo.db.users.find_one({'username':x['patientID']})
                             if pat_name:
                                 data['pat_name'] = pat_name['name']
                                 if x['department_name'] == "Biochemistry":
@@ -1233,7 +1233,7 @@ def show_records(userid):
         # print(userid)
         g.track_var['userid'] = session["userid"]
 
-        user = mongo.db.test_collection.find_one({'username':userid})
+        user = mongo.db.users.find_one({'username':userid})
         # print(user)
 
         name = user['name']
@@ -1258,7 +1258,7 @@ def show_records(userid):
                 if x['type_record'].startswith('Doc'):
                     data = mongo.db.doc_database.find_one({'patientID':userid,'_id':x['id'],'doctorID':session['userid']})
                     if data:
-                        doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                        doc_name = mongo.db.users.find_one({'username':data['doctorID']})
                         data['doc_name'] = doc_name['name']
                         data['category'] = 'Appointment'
                         data['heading'] = data['disease']
@@ -1270,7 +1270,7 @@ def show_records(userid):
                 elif x['type_record'].startswith('Radio'):
                     data = mongo.db.org_database.find_one({'patientID':userid,'_id':x['id']})
                     if data:
-                        doc_name = mongo.db.test_collection.find_one({'username':data['doctorID']})
+                        doc_name = mongo.db.users.find_one({'username':data['doctorID']})
                         data['doc_name'] = doc_name['name']
                         data['category'] = 'Radiology/Ultrasound'
                         data['heading'] = data['scantype']
@@ -1284,7 +1284,7 @@ def show_records(userid):
                 elif x['type_record'].startswith('Pharm'):
                     data = mongo.db.pharma_stock_database.find_one({'patientID':userid,'_id':x['id']})
                     if data:
-                        doc_name = mongo.db.test_collection.find_one({'username':data['PharmacyID']})
+                        doc_name = mongo.db.users.find_one({'username':data['PharmacyID']})
                         data['doc_name'] = doc_name['name']
                         data['category'] = 'Pharmacy'
                         data['heading'] = 'Medications'
@@ -1298,7 +1298,7 @@ def show_records(userid):
                 elif x['type_record'].startswith('Patho'):
                     data = mongo.db.patho_database.find_one({'patientID':userid,'_id':x['id']})
                     if data:
-                        doc_name = mongo.db.test_collection.find_one({'username':data['LaboratoryID']})
+                        doc_name = mongo.db.users.find_one({'username':data['LaboratoryID']})
                         data['doc_name'] = doc_name['name']
                         data['category'] = 'Pathology'
                         data['heading'] = data['department_name']
@@ -1476,12 +1476,12 @@ def account():
         password_hash = cryptocode.encrypt(password,sk.password_secret_key())
 
         try:
-            if not mongo.db.test_collection.find_one({'adhaar':adhaar}):
+            if not mongo.db.users.find_one({'adhaar':adhaar}):
                 id = mongo.save_file(filename,request.files['photo'])
                 
                 if title.startswith('Org'):                   
                     orgtype = request.form['orgtype']
-                    _ = mongo.db.test_collection.insert_one({"id":id,
+                    _ = mongo.db.users.insert_one({"id":id,
                                                     "name":name,
                                                     "dob":dob,
                                                     "gender":gender,
@@ -1500,7 +1500,7 @@ def account():
                                                     "time_created":time_created})
                 else:
                     
-                    _ = mongo.db.test_collection.insert_one({"id":id,
+                    _ = mongo.db.users.insert_one({"id":id,
                                                     "name":name,
                                                     "dob":dob,
                                                     "gender":gender,
@@ -1538,7 +1538,7 @@ def reset():
     if request.method == 'POST':
         username = request.form['reset-userid']
         adhaar = request.form['reset-adhaar']
-        user = mongo.db.test_collection.find_one({'username': username,'adhaar':adhaar})
+        user = mongo.db.users.find_one({'username': username,'adhaar':adhaar})
         if user:
             email = user['email']
             name = user['name']
@@ -1563,10 +1563,10 @@ def otp(username):
         mailbot = mailingbot()
         otp = request.form['otp']
         otp_db = mongo.db.otp.find_one({'username': username})['otp']
-        password_user = mongo.db.test_collection.find_one({'username': username})['password']
+        password_user = mongo.db.users.find_one({'username': username})['password']
         decoded_password = cryptocode.decrypt(password_user, sk.password_secret_key())
-        email_user = mongo.db.test_collection.find_one({'username': username})['email']
-        name_user = mongo.db.test_collection.find_one({'username': username})['name']
+        email_user = mongo.db.users.find_one({'username': username})['email']
+        name_user = mongo.db.users.find_one({'username': username})['name']
         valid = mailbot.validate_otp(otp_db,otp)
         
         if valid:
